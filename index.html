@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MYP SummarisEd</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Nunito', sans-serif; background: #D3EDEA; }
+nav { background: #1B2A4A; display: flex; align-items: center; justify-content: space-between; padding: 14px 40px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+.logo { display: flex; align-items: center; gap: 10px; background: #2d3f63; padding: 6px 12px; border-radius: 10px; text-decoration: none; cursor: pointer; }
+.logo img { width: 107px; height: 32px; object-fit: contain; }
+.logo .logo-fallback { color: white; font-weight: 800; font-size: 15px; font-family: 'Poppins',sans-serif; display: none; }
+.nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-links a { color: white; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 8px; transition: background 0.2s; cursor: pointer; white-space: nowrap; }
+.nav-links a:hover, .nav-links a.active { background: #4A90D9; }
+.search-bar { background: #FFD6D6; border: none; padding: 9px 18px; border-radius: 20px; font-size: 14px; font-family: 'Nunito',sans-serif; outline: none; width: 190px; cursor: pointer; }
+.search-overlay { display: none; position: absolute; top: 60px; right: 0; background: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.15); padding: 12px; width: 360px; z-index: 999; max-height: 420px; overflow-y: auto; }
+.search-overlay.visible { display: block; }
+.search-result-item { padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; color: #1B2A4A; font-weight: 600; border-bottom: 1px solid #f0f0f0; }
+.search-result-item:hover { background: #D3EDEA; }
+.search-result-subject { font-size: 11px; color: #6B6B6B; font-weight: 400; }
+.search-result-unit { font-size: 11px; color: #4A90D9; font-weight: 500; }
+.page { display: none; }
+.page.active { display: block; }
+.banner { background: #6AACF0; color: white; text-align: center; padding: 20px 40px; font-size: 20px; font-weight: 800; font-family: 'Poppins',sans-serif; }
+.about-section { background: #D3EDEA; padding: 40px 60px; }
+.about-inner { background: #FAE5D3; display: flex; align-items: center; gap: 50px; padding: 40px 50px; border-radius: 24px; }
+.about-text { flex: 2; }
+.about-text h2 { color: #1B2A4A; font-size: 26px; font-weight: 800; margin-bottom: 16px; font-family: 'Poppins',sans-serif; }
+.about-text p { color: #3A3A3A; font-size: 15px; line-height: 1.8; font-weight: 500; }
+.about-image { flex: 0 0 auto; width: 220px; border-radius: 16px; overflow: hidden; border: 3px solid #1B2A4A; background: #c4a882; display: flex; align-items: center; justify-content: center; }
+.about-image img { width: 220px; height: 293px; object-fit: cover; display: block; }
+.subjects-section { padding: 50px 40px 30px; background: #D3EDEA; }
+.subjects-heading { background: #FFD6D6; text-align: center; padding: 12px 50px; border-radius: 30px; font-size: 20px; font-weight: 800; color: #1B2A4A; width: fit-content; margin: 0 auto 30px; font-family: 'Poppins',sans-serif; }
+.subject-cards { display: flex; gap: 20px; justify-content: center; }
+.subject-card { background: #1B2A4A; color: white; border-radius: 18px; padding: 28px 22px; flex: 1; display: flex; flex-direction: column; gap: 16px; max-width: 280px; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+.subject-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(27,42,74,0.3); }
+.subject-card h3 { font-size: 18px; font-weight: 800; font-family: 'Poppins',sans-serif; }
+.subject-card p { font-size: 13px; line-height: 1.6; border: 1.5px solid rgba(255,255,255,0.4); padding: 12px; border-radius: 10px; flex: 1; }
+.explore-btn { background: #4A90D9; color: white; border: none; padding: 11px 28px; border-radius: 22px; font-size: 14px; cursor: pointer; font-weight: 700; font-family: 'Nunito',sans-serif; align-self: center; transition: background 0.2s; }
+.explore-btn:hover { background: #357ABD; }
+.why-section { background: #4A90D9; margin: 30px 40px 0; border-radius: 20px; padding: 32px 50px; text-align: center; }
+.why-section h2 { color: white; font-size: 22px; font-weight: 800; margin-bottom: 18px; font-family: 'Poppins',sans-serif; }
+.why-section p { color: white; font-size: 15px; line-height: 2.2; font-weight: 500; }
+footer { background: #1B2A4A; color: white; text-align: center; padding: 18px; font-size: 14px; font-weight: 600; margin-top: 40px; }
+.subject-banner { color: white; text-align: center; padding: 24px 40px; }
+.subject-banner h1 { font-size: 28px; font-weight: 800; font-family: 'Poppins',sans-serif; }
+.subject-banner p { font-size: 15px; margin-top: 6px; opacity: 0.9; }
+.subject-search-wrap { padding: 20px 40px; }
+.subject-search { width: 100%; max-width: 600px; display: block; padding: 12px 20px; border: 2px solid #E0E0E0; border-radius: 25px; font-size: 15px; font-family: 'Nunito',sans-serif; background: white; outline: none; }
+.subject-search:focus { border-color: #4A90D9; }
+.two-col { display: flex; gap: 24px; padding: 0 40px 40px; align-items: flex-start; }
+.sidebar { width: 250px; min-width: 250px; background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
+.sidebar h3 { color: #1B2A4A; font-size: 18px; font-weight: 800; margin-bottom: 16px; font-family: 'Poppins',sans-serif; text-align: center; }
+.unit-heading { color: #1B2A4A; font-size: 12px; font-weight: 800; margin: 14px 0 6px; padding: 6px 10px; background: #D3EDEA; border-radius: 8px; font-family: 'Poppins',sans-serif; cursor: pointer; }
+.topic-link { display: block; color: #3A3A3A; font-size: 12px; padding: 5px 10px 5px 16px; border-radius: 6px; transition: background 0.15s; font-weight: 500; cursor: pointer; }
+.topic-link:hover { background: #D3EDEA; color: #1B2A4A; font-weight: 700; }
+.main-area { flex: 1; }
+.unit-block { background: white; border-radius: 16px; padding: 22px; margin-bottom: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.unit-block-title { color: #1B2A4A; font-size: 19px; font-weight: 800; font-family: 'Poppins',sans-serif; margin-bottom: 16px; border-bottom: 2px solid #D3EDEA; padding-bottom: 10px; }
+.all-topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 12px; }
+.mini-topic-card { background: #f8f9fa; border: 1.5px solid #E0E0E0; border-radius: 12px; padding: 14px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.mini-topic-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); border-color: #4A90D9; }
+.mini-topic-card h4 { color: #1B2A4A; font-size: 13px; font-weight: 700; margin-bottom: 5px; font-family: 'Poppins',sans-serif; }
+.mini-topic-card .unit-lbl { color: #6B6B6B; font-size: 11px; font-style: italic; margin-bottom: 8px; }
+.mini-card-footer { display: flex; align-items: center; justify-content: space-between; }
+.resource-icons { font-size: 13px; }
+.diff-tag { padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; color: white; }
+.easy { background: #4CAF50; } .medium { background: #FF9800; } .hard { background: #F44336; }
+.viewer-page { padding: 30px 40px; }
+.viewer-header { background: white; border-radius: 16px; padding: 22px 28px; margin-bottom: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.viewer-header h1 { color: #1B2A4A; font-size: 24px; font-weight: 800; font-family: 'Poppins',sans-serif; }
+.viewer-header .unit-sub { color: #6B6B6B; font-size: 13px; font-style: italic; margin-top: 4px; }
+.viewer-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 22px; }
+.viewer-left, .viewer-right { display: flex; flex-direction: column; gap: 18px; }
+.viewer-box { background: white; border-radius: 16px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.viewer-box h3 { color: #1B2A4A; font-size: 15px; font-weight: 800; margin-bottom: 14px; font-family: 'Poppins',sans-serif; border-bottom: 2px solid #D3EDEA; padding-bottom: 9px; }
+.video-placeholder { background: #2d3f63; border-radius: 12px; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; gap: 10px; }
+.pdf-placeholder { background: #fff5f5; border: 2px dashed #F44336; border-radius: 12px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #F44336; gap: 8px; }
+.summary-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.summary-points li { background: #f4f6f9; border-radius: 10px; padding: 11px 14px; font-size: 13.5px; color: #111827; font-weight: 600; display: flex; gap: 10px; line-height: 1.6; align-items: flex-start; border-left: 3px solid #1B2A4A; }
+.summary-points li::before { content: "•"; color: #1B2A4A; font-size: 18px; font-weight: 900; flex-shrink: 0; line-height: 1.3; }
+.back-btn { display: inline-flex; align-items: center; gap: 8px; background: #1B2A4A; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 18px; font-family: 'Nunito',sans-serif; transition: background 0.2s; }
+.back-btn:hover { background: #2d3f63; }
+.pp-page { padding: 40px; }
+.pp-page h1 { color: #1B2A4A; font-size: 28px; font-weight: 800; font-family: 'Poppins',sans-serif; margin-bottom: 6px; }
+.pp-subtitle { color: #6B6B6B; font-size: 14px; margin-bottom: 28px; }
+.pp-tabs { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+.pp-tab { padding: 10px 22px; border-radius: 20px; border: 2px solid #1B2A4A; background: transparent; color: #1B2A4A; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Nunito',sans-serif; transition: all 0.2s; }
+.pp-tab.active, .pp-tab:hover { background: #1B2A4A; color: white; }
+.pp-subject-section { display: none; }
+.pp-subject-section.active { display: block; }
+.pp-subject-title { color: #1B2A4A; font-size: 19px; font-weight: 800; font-family: 'Poppins',sans-serif; margin-bottom: 18px; }
+.pp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; }
+.pp-card { background: white; border: 1.5px solid #E0E0E0; border-radius: 12px; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; transition: border-color 0.2s, box-shadow 0.2s; }
+.pp-card:hover { border-color: #4A90D9; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.pp-card-info { flex: 1; }
+.pp-card-title { color: #1B2A4A; font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.pp-card-sub { color: #6B6B6B; font-size: 12px; }
+.pp-download-btn { background: #4A90D9; color: white; border: none; padding: 8px 14px; border-radius: 14px; font-size: 12px; font-weight: 700; cursor: pointer; text-decoration: none; font-family: 'Nunito',sans-serif; transition: background 0.2s; }
+.pp-download-btn:hover { background: #357ABD; }
+.notes-page { padding: 40px; }
+.notes-page h1 { color: #1B2A4A; font-size: 28px; font-weight: 800; font-family: 'Poppins',sans-serif; margin-bottom: 6px; }
+.notes-subtitle { color: #6B6B6B; font-size: 14px; margin-bottom: 32px; }
+.notes-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.notes-subject-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 14px rgba(0,0,0,0.08); }
+.notes-card-header { display: flex; align-items: center; gap: 12px; padding: 18px 24px; }
+.notes-card-emoji { font-size: 22px; }
+.notes-card-title { color: white; font-size: 17px; font-weight: 800; font-family: 'Poppins',sans-serif; }
+.notes-card-body { padding: 20px 24px; }
+.notes-card-label { color: #1B2A4A; font-size: 13px; font-weight: 700; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.8px; }
+.notes-upload-zone { border: 2px dashed #C0D6E8; border-radius: 14px; background: #f8fbff; padding: 28px 20px; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; margin-bottom: 16px; }
+.notes-upload-zone:hover, .notes-upload-zone.drag-over { background: #dbeeff; border-color: #4A90D9; }
+.notes-upload-icon { font-size: 30px; margin-bottom: 8px; }
+.notes-upload-zone p { color: #6B6B6B; font-size: 13px; margin-bottom: 12px; }
+.notes-upload-btn { display: inline-block; background: #1B2A4A; color: white; padding: 8px 22px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Nunito',sans-serif; transition: background 0.2s; }
+.notes-upload-btn:hover { background: #2d3f63; }
+.notes-upload-btn input { display: none; }
+.notes-file-list { list-style: disc; padding-left: 20px; margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.notes-file-list li { font-size: 13px; color: #1B2A4A; font-weight: 600; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.notes-file-list li span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.notes-file-list li span:hover { color: #4A90D9; text-decoration: underline; }
+.notes-file-del { background: none; border: none; color: #ccc; font-size: 14px; cursor: pointer; padding: 0 2px; line-height: 1; flex-shrink: 0; }
+.notes-file-del:hover { color: #F44336; }
+.empty-notes { text-align: center; padding: 10px 0 4px; color: #aaa; font-size: 13px; }
+.notes-modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
+.notes-modal-overlay.open { display: flex; }
+.notes-modal { background: white; border-radius: 18px; width: 90%; max-width: 860px; height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.notes-modal-header { background: #1B2A4A; color: white; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.notes-modal-header h3 { font-size: 15px; font-weight: 700; font-family: 'Poppins',sans-serif; }
+.notes-modal-close { background: none; border: none; color: white; font-size: 22px; cursor: pointer; line-height: 1; }
+.notes-modal-body { flex: 1; overflow: hidden; }
+.notes-modal-body iframe, .notes-modal-body embed { width: 100%; height: 100%; border: none; }
+.notes-modal-img { width: 100%; height: 100%; object-fit: contain; }
+</style>
+</head>
+<body>
+
+<div class="notes-modal-overlay" id="notesModalOverlay">
+  <div class="notes-modal">
+    <div class="notes-modal-header">
+      <h3 id="modalFileName">File Viewer</h3>
+      <button class="notes-modal-close" onclick="closeNotesModal()">✕</button>
+    </div>
+    <div class="notes-modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    <img src="logo.png" alt="Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span class="logo-fallback">MYP SummarisEd</span>
+  </div>
+  <div class="nav-links">
+    <a onclick="showSubject('mathematics')" id="nav-maths">Standard Mathematics 📊</a>
+    <a onclick="showSubject('biology')" id="nav-bio">Biology 🧬</a>
+    <a onclick="showSubject('chemistry')" id="nav-chem">Chemistry ⚗️</a>
+    <a onclick="showSubject('physics')" id="nav-phys">Physics 🚀</a>
+    <a onclick="showPastPapers('mathematics')" id="nav-pp">Past Papers 📝</a>
+    <a onclick="showNotes('mathematics')" id="nav-notes">MYP Notes 📁</a>
+  </div>
+  <div style="position:relative">
+    <input class="search-bar" type="text" placeholder="Search topics... 🔍" id="globalSearch" oninput="globalSearchFn()" onfocus="document.getElementById('searchOverlay').classList.add('visible')" onblur="setTimeout(()=>document.getElementById('searchOverlay').classList.remove('visible'),200)">
+    <div class="search-overlay" id="searchOverlay"></div>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <div class="banner">Welcome To MYP SummarisEd! Your Compiled Study Hub for Revision and Studying!</div>
+  <div class="about-section">
+    <div class="about-inner">
+      <div class="about-text">
+        <h2>What is MYP SummarisEd?</h2>
+        <p>MYP SummarisEd is a free compiled study hub designed specifically for students in the IB Middle Years Programme. The platform organises Mathematics and Sciences resources by subject and unit, giving students instant access to videos, notes, past papers and revision materials that are fully aligned with the official MYP syllabus. No more wasting time searching the internet for relevant resources — everything you need is in one place.</p>
+      </div>
+      <div class="about-image">
+        <img src="homepage.png" alt="Students studying">
+      </div>
+    </div>
+  </div>
+  <div class="subjects-section">
+    <div class="subjects-heading">Subjects Available:</div>
+    <div class="subject-cards">
+      <div class="subject-card" onclick="showSubject('mathematics')"><h3>Standard Mathematics 📊</h3><p>Explore compiled MYP Standard Mathematics resources organised by unit.</p><button class="explore-btn">Explore!</button></div>
+      <div class="subject-card" onclick="showSubject('biology')"><h3>Biology 🧬</h3><p>Explore compiled MYP Biology resources organised by unit.</p><button class="explore-btn">Explore!</button></div>
+      <div class="subject-card" onclick="showSubject('chemistry')"><h3>Chemistry ⚗️</h3><p>Explore compiled MYP Chemistry resources organised by unit.</p><button class="explore-btn">Explore!</button></div>
+      <div class="subject-card" onclick="showSubject('physics')"><h3>Physics 🚀</h3><p>Explore compiled MYP Physics resources organised by unit.</p><button class="explore-btn">Explore!</button></div>
+    </div>
+  </div>
+  <div class="why-section">
+    <h2>Why Choose MYP SummarisEd?</h2>
+    <p>All resources are fully aligned with the official IB MYP syllabus.<br>Access videos, notes, past papers and revision packs completely free.<br>Find everything you need in one place, organised by subject and unit.</p>
+  </div>
+  <footer>MYP SummarisEd 2026</footer>
+</div>
+
+<!-- SUBJECT PAGE -->
+<div id="page-subject" class="page">
+  <div class="subject-banner" id="subjectBanner"><h1 id="subjectTitle"></h1><p id="subjectSubtitle"></p></div>
+  <div class="subject-search-wrap"><input class="subject-search" type="text" id="subjectSearch" placeholder="Search topics and units..." oninput="filterTopics()"></div>
+  <div class="two-col">
+    <div class="sidebar"><h3>Units</h3><div id="sidebarContent"></div></div>
+    <div class="main-area" id="mainTopicArea"></div>
+  </div>
+  <footer>MYP SummarisEd 2026</footer>
+</div>
+
+<!-- VIEWER PAGE -->
+<div id="page-viewer" class="page">
+  <div class="viewer-page">
+    <button class="back-btn" onclick="goBack()">← Back</button>
+    <div class="viewer-header"><h1 id="viewerTopicName"></h1><div class="unit-sub" id="viewerUnitName"></div></div>
+    <div class="viewer-grid">
+      <div class="viewer-left">
+        <div class="viewer-box"><h3>📹 Video Walkthrough</h3><div id="videoEmbed"></div></div>
+        <div class="viewer-box"><h3>📄 PDF Notes</h3><div id="pdfEmbed"></div></div>
+      </div>
+      <div class="viewer-right">
+        <div class="viewer-box"><h3>⚡ Quick Summary</h3><ul class="summary-points" id="quickSummary"></ul></div>
+      </div>
+    </div>
+  </div>
+  <footer>MYP SummarisEd 2026</footer>
+</div>
+
+<!-- PAST PAPERS PAGE -->
+<div id="page-pastpapers" class="page">
+  <div class="pp-page">
+    <h1>Past Papers 📝</h1>
+    <p class="pp-subtitle">Download official MYP past papers by subject. Papers available from May 2016 to May 2023.</p>
+    <div class="pp-tabs">
+      <button class="pp-tab active" onclick="switchPPTab('mathematics')">Standard Mathematics 📊</button>
+      <button class="pp-tab" onclick="switchPPTab('biology')">Biology 🧬</button>
+      <button class="pp-tab" onclick="switchPPTab('chemistry')">Chemistry ⚗️</button>
+      <button class="pp-tab" onclick="switchPPTab('physics')">Physics 🚀</button>
+    </div>
+    <div class="pp-subject-section active" id="pp-mathematics">
+      <div class="pp-subject-title">Standard Mathematics — Past Papers</div>
+      <div class="pp-grid">
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2016 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M16" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2017 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M17" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2018 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M18" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2019 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M19" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2020 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M20" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2021 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M21" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2022 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M22" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2023 — Mathematics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_MATH_M23" download>Download</a></div>
+      </div>
+    </div>
+    <div class="pp-subject-section" id="pp-biology">
+      <div class="pp-subject-title">Biology — Standard Level Past Papers</div>
+      <div class="pp-grid">
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2016 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M16" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2017 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M17" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2018 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M18" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2019 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M19" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2020 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M20" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2021 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M21" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2022 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M22" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2023 — Biology</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_BIO_M23" download>Download</a></div>
+      </div>
+    </div>
+    <div class="pp-subject-section" id="pp-chemistry">
+      <div class="pp-subject-title">Chemistry — Standard Level Past Papers</div>
+      <div class="pp-grid">
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2016 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M16" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2017 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M17" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2018 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M18" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2019 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M19" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2020 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M20" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2021 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M21" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2022 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M22" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2023 — Chemistry</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_CHEM_M23" download>Download</a></div>
+      </div>
+    </div>
+    <div class="pp-subject-section" id="pp-physics">
+      <div class="pp-subject-title">Physics — Standard Level Past Papers</div>
+      <div class="pp-grid">
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2016 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M16" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2017 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M17" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2018 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M18" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2019 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M19" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2020 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M20" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2021 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M21" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2022 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M22" download>Download</a></div>
+        <div class="pp-card"><div class="pp-card-info"><div class="pp-card-title">May 2023 — Physics</div><div class="pp-card-sub">Standard Level · Paper 1 &amp; 2</div></div><a class="pp-download-btn" href="PAST_PAPER_PLACEHOLDER_PHYS_M23" download>Download</a></div>
+      </div>
+    </div>
+  </div>
+  <footer>MYP SummarisEd 2026</footer>
+</div>
+
+<!-- MYP NOTES PAGE -->
+<div id="page-notes" class="page">
+  <div style="padding: 40px;">
+    <h1 style="color:#1B2A4A; font-size:28px; font-weight:800; font-family:'Poppins',sans-serif; margin-bottom:8px;">MYP Notes 📁</h1>
+    <p style="color:#6B6B6B; font-size:14px; margin-bottom:32px;">Additional notes and resources compiled for each subject. Files open directly in your browser.</p>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px;">
+
+      <!-- Mathematics -->
+      <div style="background:white; border-radius:18px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <div style="background:#6AACF0; padding:20px 24px; display:flex; align-items:center; gap:12px;">
+          <span style="font-size:24px;">📊</span>
+          <span style="color:white; font-size:18px; font-weight:800; font-family:'Poppins',sans-serif;">Standard Mathematics</span>
+        </div>
+        <div style="padding:24px;">
+          <p style="color:#1B2A4A; font-size:13px; font-weight:800; font-family:'Poppins',sans-serif; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Additional Notes</p>
+          <div style="display:flex; flex-direction:column; gap:10px;" id="notes-list-mathematics">
+            <a href="https://drive.google.com/file/d/1w0N2ISnTmMdjjgEnTcacZ5eBQLF6a_xk/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Circle Theorem</a>
+            <a href="https://drive.google.com/file/d/1aHkm23FphzE5edePN7Bwtp58IMLpqYS5/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Circle Theorems Answers</a>
+            <a href="https://drive.google.com/file/d/1zGO3dB9mXg_5-vDq4RzgM8KIDM6oIMbY/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Exemplar Marked Candidate Responses</a>
+            <a href="https://drive.google.com/file/d/1e3eCP1gftpNJ1TTkv62LBA25cqQ47zG_/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Quadratic nth Term (1)</a>
+            <a href="https://drive.google.com/file/d/1q5O92ZN7z7DFJrE81YWMaEy4XfVoN_WO/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Quadratic nth Term answers</a>
+            <a href="https://drive.google.com/file/d/1oTbnX2I5_bNfOui9J1Z8J4pTPXU5wqK0/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Trigonometry</a>
+            <a href="https://drive.google.com/file/d/1E_7G04HKpbVNYaQNTq9OJdZlmvzY1f24/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Trigonometry Solutions</a>
+            <a href="https://drive.google.com/file/d/1CRl7cXb4OkdEzfScTk-twgCCDmLZZThr/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 venn diagrams answers</a>
+            <a href="https://drive.google.com/file/d/13ezl3oWfs1b9AylRFzA9xat2a3f1Ty-6/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #6AACF0;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 venn diagrams pdf (1)</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Biology -->
+      <div style="background:white; border-radius:18px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <div style="background:#4CAF50; padding:20px 24px; display:flex; align-items:center; gap:12px;">
+          <span style="font-size:24px;">🧬</span>
+          <span style="color:white; font-size:18px; font-weight:800; font-family:'Poppins',sans-serif;">Biology</span>
+        </div>
+        <div style="padding:24px;">
+          <p style="color:#1B2A4A; font-size:13px; font-weight:800; font-family:'Poppins',sans-serif; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Additional Notes</p>
+          <div style="display:flex; flex-direction:column; gap:10px;" id="notes-list-biology">
+            <a href="https://drive.google.com/file/d/1ch1O9aL04Q11gKVXIiDz1LTuG8ZTw7iw/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #4CAF50;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Biology</a>
+            <a href="https://drive.google.com/file/d/17cJSSQtwQaEoiDQxZQKisp9n8kgfvCEU/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #4CAF50;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 How to Revise</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chemistry -->
+      <div style="background:white; border-radius:18px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <div style="background:#d9534f; padding:20px 24px; display:flex; align-items:center; gap:12px;">
+          <span style="font-size:24px;">⚗️</span>
+          <span style="color:white; font-size:18px; font-weight:800; font-family:'Poppins',sans-serif;">Chemistry</span>
+        </div>
+        <div style="padding:24px;">
+          <p style="color:#1B2A4A; font-size:13px; font-weight:800; font-family:'Poppins',sans-serif; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Additional Notes</p>
+          <div style="display:flex; flex-direction:column; gap:10px;" id="notes-list-chemistry">
+            <a href="https://drive.google.com/file/d/1YtR8inZurLno8G_DCiFfworL46czoxMw/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Assessment Revision Guide</a>
+            <a href="https://drive.google.com/file/d/1XHah82L6tcXJm8QKfBwa24hL8awLbVq9/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Chemical Energetics MCQ Answers</a>
+            <a href="https://drive.google.com/file/d/1TAvuq53DTNgPOFI-U8rhE1bwkrYT9HmS/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Exemplar Marked Candidate Responses</a>
+            <a href="https://drive.google.com/file/d/1DH5jG9rywyB0NBRfmtcLjAKMX9QIIape/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 2 Periodic Table</a>
+            <a href="https://drive.google.com/file/d/1P-V2NskcezQGVs7r-JWs_KMKLdmZB_Gf/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 4 Ionic Bonding</a>
+            <a href="https://drive.google.com/file/d/1dvuQmPzLnLDSpPdRSv3z6vezzCHN88ya/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 5 Chemical Bonding Str</a>
+            <a href="https://drive.google.com/file/d/1Th4J1LDePdQpX6e0HfgS__OebMoSThqz/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 6 Chemical Energetics MC</a>
+            <a href="https://drive.google.com/file/d/1ivln1KQOax_qbYqJTvcC32VGzG5hfnq9/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 7 Energetics</a>
+            <a href="https://drive.google.com/file/d/16DXrpC4zVNCpJU6xRvTp3WrUiDOKArb4/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 8 Mole Concept</a>
+            <a href="https://drive.google.com/file/d/1TmgagWWOwycI9WTla2OQ5K-dPATcL_eE/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet 9 Acid and Alkalis</a>
+            <a href="https://drive.google.com/file/d/1z9i-a3W_FI0FAk-ZtZjrgDLTzo_9cNBx/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet1 Atomic Structure</a>
+            <a href="https://drive.google.com/file/d/1roC6NvoO3P_KgNEn7gUtDOoUqP-ohn1s/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #d9534f;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Worksheet3 Chemical Bonding</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Physics -->
+      <div style="background:white; border-radius:18px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.07);">
+        <div style="background:#f0ad4e; padding:20px 24px; display:flex; align-items:center; gap:12px;">
+          <span style="font-size:24px;">🚀</span>
+          <span style="color:white; font-size:18px; font-weight:800; font-family:'Poppins',sans-serif;">Physics</span>
+        </div>
+        <div style="padding:24px;">
+          <p style="color:#1B2A4A; font-size:13px; font-weight:800; font-family:'Poppins',sans-serif; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.5px;">Additional Notes</p>
+          <div style="display:flex; flex-direction:column; gap:10px;" id="notes-list-physics">
+            <a href="https://drive.google.com/file/d/1-YG11h-2QjAGXX7eg2MbANkwct7wzfKO/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Exemplar Marked Candidate Responses</a>
+            <a href="https://drive.google.com/file/d/1x9ez7Eywi4-DSMbk8J8nKHhUkHdlpz87/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Force Worksheet</a>
+            <a href="https://drive.google.com/file/d/1xxC7NjO0cHwr5IGOKnLAThPOhjVp3RW6/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Full Textbook Merged 2</a>
+            <a href="https://drive.google.com/file/d/1ZQdJHot4DuCUon7PcZbIpcJEuxacoqJQ/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 GCSE Physics Workbook</a>
+            <a href="https://drive.google.com/file/d/1_X1ZgBsEUqQtL2_WMt5-cvPlTTObamEo/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 net force and acceleration worksheet</a>
+            <a href="https://drive.google.com/file/d/1Oazk4uBAE-5KMNwDmMG9nlEjx8fKJGz4/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Physics</a>
+            <a href="https://drive.google.com/file/d/1bShhocJ9ufPXgrZD_wdX5rvbX8LRYu2s/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 ProblemsF ma</a>
+            <a href="https://drive.google.com/file/d/158pOZQ5muXPFZZaEvPpMC1hvD7ZmxPg5/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Speed velocity and acceleration pro</a>
+            <a href="https://drive.google.com/file/d/1h2JR89n3TrcYYauxFknwXbWYJMOHvL9H/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 year 10 Physics end of year exam</a>
+            <a href="https://drive.google.com/file/d/1syXGT8Rb3G5AWGWDswH51Y4oifnvrtB2/preview" target="_blank" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f4f6f9;border-radius:10px;text-decoration:none;color:#1B2A4A;font-size:13px;font-weight:600;border-left:3px solid #f0ad4e;transition:background 0.2s;" onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#f4f6f9'">📄 Year 10 Physics exam topic list</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <footer>MYP SummarisEd 2026</footer>
+</div>
+
+<script>
+// ═══════════════ SUBJECT DATA ═══════════════
+const subjectData = {
+  mathematics: {
+    name: "Standard Mathematics 📊", subtitle: "Your Compiled MYP Standard Mathematics Resources", color: "#6AACF0",
+    units: [
+      { name: "Unit 1: Number", topics: [
+        { name: "Number Systems (N, Z, Q, R)", diff: "easy", video: "https://www.youtube.com/embed/dEf7FqWcR2Y", pdf: "https://drive.google.com/file/d/1QXqpUPckRiMwOi2dVRWHlPJAOT5e6cnP/preview", summary: ["ℕ = Natural numbers (positive integers + zero used in counting); ℤ = Integers (includes all negatives, zero, positives)", "ℚ = Rational numbers — any value expressible as p/q where p and q are integers and q ≠ 0", "ℝ = Real numbers — the complete number line including all rationals and irrationals such as √2 and π", "Classifying and ordering numbers within these sets and transforming between different forms (fraction, decimal, percentage) is a core skill"] },
+        { name: "Absolute Value", diff: "easy", summary: ["Absolute value |x| gives the distance of a number from zero on the number line — always non-negative", "|-7| = 7 and |7| = 7; used to measure magnitude without direction in real-world distance contexts", "Solving equations: |x − 3| = 7 yields x = 10 or x = −4 — split into two cases", "Ordering numbers on a number line using absolute value comparisons is a key skill"] },
+        { name: "Standard Form (Scientific Notation)", diff: "easy", summary: ["Standard form writes a number as a × 10ⁿ where 1 ≤ a < 10 and n is an integer", "Large: 450,000 = 4.5 × 10⁵; Small: 0.0032 = 3.2 × 10⁻³ — the sign of n shows direction", "Multiplying: multiply the a-values and add the exponents; Dividing: divide a-values and subtract exponents", "Essential in science for expressing very large (astronomical distances) or very small (atomic) quantities"] },
+        { name: "Surds, Radicals and Irrational Numbers", diff: "medium", summary: ["Irrational numbers cannot be expressed as p/q — examples include √2, √3, √5, π, and e", "A surd is an unresolved root: √12 = √(4 × 3) = 2√3 — always extract the largest perfect square factor", "Rationalising the denominator: multiply numerator and denominator by the surd to eliminate it from below", "Recurring decimals (e.g. 0.̄3) are rational; non-recurring, non-terminating decimals are irrational"] },
+        { name: "Laws of Exponents (Integer and Fractional)", diff: "medium", summary: ["aᵐ × aⁿ = aᵐ⁺ⁿ; aᵐ ÷ aⁿ = aᵐ⁻ⁿ; (aᵐ)ⁿ = aᵐⁿ — the three core index laws", "a⁰ = 1 (any non-zero base); a⁻ⁿ = 1/aⁿ — negative exponents represent reciprocals", "Fractional exponents: a^(1/n) = ⁿ√a; a^(m/n) = (ⁿ√a)ᵐ — connects roots and powers", "Applied in standard form calculations, compound interest, and exponential growth/decay models"] },
+        { name: "Sets and Venn Diagrams", diff: "medium", summary: ["Set vocabulary: element (∈), subset (⊂), universal set (ξ), null/empty set (∅)", "Operations: union A ∪ B (all elements in either), intersection A ∩ B (elements in both), complement A′ (not in A)", "Properties: commutative (A ∪ B = B ∪ A), associative, distributive — mirror those of arithmetic", "Venn diagrams model real-life problems with two or three overlapping sets; regions represent specific combinations"] },
+        { name: "Prime Factors, GCD and LCM", diff: "easy", summary: ["Every integer > 1 is either prime or a unique product of primes — the Fundamental Theorem of Arithmetic", "Prime factorisation: 360 = 2³ × 3² × 5 — use a factor tree or repeated division", "GCD (HCF): take the lowest power of each common prime factor; LCM: take the highest power of each prime", "Applications: simplifying fractions, solving problems involving shared events or synchronisation"] },
+        { name: "Direct and Inverse Proportion", diff: "easy", summary: ["Direct proportion: y = kx (or y ∝ x) — graph is a straight line through the origin", "Inverse proportion: y = k/x (or y ∝ 1/x) — graph is a hyperbola; as x doubles, y halves", "Find the constant k by substituting a known (x, y) pair into the relevant equation", "Used in currency conversion, speed-time problems, and unit rates in everyday contexts"] },
+        { name: "Ratio, Proportion and Currency Conversion", diff: "easy", summary: ["A ratio a : b compares two quantities in the same units; simplify by dividing both parts by their GCD", "Dividing a quantity in a given ratio: find the total parts, calculate one part, then multiply accordingly", "Percentage increase/decrease: new = original × (1 ± r/100); reverse percentage finds the original", "Currency conversion multiplies or divides by the exchange rate — always check which direction the rate applies"] },
+        { name: "Number Sequences", diff: "medium", summary: ["Arithmetic sequence: common difference d is added each term; nth term = a + (n−1)d where a is the first term", "Geometric sequence: common ratio r is multiplied each term; nth term = arⁿ⁻¹", "Triangular numbers: 1, 3, 6, 10, 15... nth term = n(n+1)/2; Fibonacci: each term is the sum of the two before", "Identify type by checking whether differences (arithmetic) or ratios (geometric) are constant between terms"] },
+        { name: "Rounding: Decimal Places and Significant Figures", diff: "easy", summary: ["Decimal places count digits after the decimal point; round the last kept digit up if the next is ≥ 5", "Significant figures: count from the first non-zero digit; 0.00307 has 3 s.f.; 45,600 has 3 s.f. (ambiguous without context)", "Estimation: round all values to 1 s.f. and calculate mentally to check the reasonableness of an answer", "Always state the degree of accuracy when giving a rounded answer in a real-world or exam context"] }
+      ]},
+      { name: "Unit 2: Algebra", topics: [
+        { name: "Algebraic Expressions: Expanding and Simplifying", diff: "easy", summary: ["Like terms share exactly the same variable part — only coefficients are added or subtracted", "Expanding brackets: a(b + c) = ab + ac; (a + b)(c + d) = ac + ad + bc + bd (FOIL method)", "Perfect square: (a + b)² = a² + 2ab + b²; difference of squares: (a + b)(a − b) = a² − b²", "Simplification always precedes further operations — a tidy expression prevents arithmetic errors"] },
+        { name: "Factorising Linear and Quadratic Expressions", diff: "hard", summary: ["Linear: take out the highest common factor — 6x + 9 = 3(2x + 3)", "Quadratic x² + bx + c: find two numbers multiplying to c and adding to b — e.g. x² + 5x + 6 = (x+2)(x+3)", "Difference of squares: a² − b² = (a+b)(a−b) — a special pattern worth memorising immediately", "For ax² + bx + c (a ≠ 1): use the AC method — find two numbers with product = ac and sum = b, then split and factor by grouping"] },
+        { name: "Changing the Subject of a Formula", diff: "medium", summary: ["Isolate the required variable by applying inverse operations in reverse order of BIDMAS/BODMAS", "If the variable appears twice: collect all terms containing it on one side, then factorise and divide", "Example: v = u + at → rearrange for a: subtract u from both sides → v − u = at → divide by t → a = (v−u)/t", "Fractional or square-root structures require clearing the fraction or squaring both sides first"] },
+        { name: "Solving Equations with Algebraic Fractions", diff: "hard", summary: ["Multiply every term by the lowest common denominator (LCD) of all fractions to clear them", "Example: x/3 + (x+1)/4 = 2 — multiply through by 12 to get 4x + 3(x+1) = 24 → solve for x", "Always check solutions back into the original equation — some apparent solutions may be extraneous", "Algebraic fractions require the same factorisation and simplification skills as numerical fractions"] },
+        { name: "Laws of Exponents in Algebra", diff: "medium", summary: ["All index laws (product, quotient, power, negative, fractional) apply with algebraic bases as well as numbers", "Examples: x³ × x⁴ = x⁷; (2x²)³ = 8x⁶; 16x⁴ ÷ 4x² = 4x²", "Negative index: x⁻² = 1/x²; fractional index: x^(3/2) = (√x)³ — simplify by separating the root and the power", "Used in simplifying expressions, solving exponential equations, and working with standard form in algebra"] },
+        { name: "Sequences: Finding the General Rule", diff: "medium", summary: ["For an arithmetic sequence, the nth term formula is: uₙ = a + (n−1)d — derive from the pattern", "For a geometric sequence, the nth term formula is: uₙ = ar^(n−1) — identify a (first term) and r (ratio)", "Quadratic sequences have a constant second difference — the nth term will contain an n² term", "Always verify the general rule by substituting n = 1, 2, 3 back in to confirm it generates the correct terms"] },
+        { name: "Algorithms", diff: "medium", summary: ["An algorithm is a precise, finite, step-by-step procedure that reliably solves a class of problems", "Must be clear (unambiguous), finite (terminates), effective (produces the correct result every time)", "Flowcharts: ovals for start/end, rectangles for processes (instructions), diamonds for decisions (yes/no branches)", "Analysing and tracing algorithms is a MYP mathematics skill — follow each step with given input values"] }
+      ]},
+      { name: "Unit 3: Functions", topics: [
+        { name: "Mappings and Function Notation", diff: "easy", summary: ["A function maps each input (from the domain) to exactly ONE output in the range — one-to-one or many-to-one only", "f(x) notation: f(3) means substitute x = 3; if f(x) = 2x + 1 then f(3) = 7", "One-to-many mappings are NOT functions — a vertical line test on the graph catches this", "Domain = all valid input values; Range = all corresponding output values produced by the function"] },
+        { name: "Linear Functions y = mx + c", diff: "easy", summary: ["m is the gradient (slope): positive → rises left to right; negative → falls; zero → horizontal line", "c is the y-intercept: the y-coordinate where the line cuts the y-axis (substitute x = 0)", "Finding gradient from two points: m = (y₂ − y₁) / (x₂ − x₁) — rise divided by run", "To plot: start at y-intercept (0, c), then use the gradient as rise/run to find additional points"] },
+        { name: "Parallel and Perpendicular Lines", diff: "medium", summary: ["Parallel lines have identical gradients and never intersect — different y-intercepts ensure they are distinct", "Perpendicular lines have gradients that multiply to −1: if m₁ = 2, then m₂ = −1/2 (negative reciprocal)", "Equation through a point with known gradient: use y − y₁ = m(x − x₁), then rearrange to y = mx + c", "These relationships are tested in coordinate geometry problems involving squares, rectangles, and right angles"] },
+        { name: "Simultaneous Equations", diff: "hard", summary: ["Two equations, two unknowns — the solution is the coordinate pair satisfying both equations simultaneously", "Substitution: express one variable from equation 1 and substitute into equation 2 to reduce to one variable", "Elimination: multiply equations to make one variable's coefficients equal, then add or subtract to cancel it", "Graphical method: the solution is the intersection point of the two straight lines on a coordinate grid"] },
+        { name: "Quadratic Functions", diff: "hard", summary: ["Standard form: y = ax² + bx + c — the parabola opens upward if a > 0 and downward if a < 0", "Roots (x-intercepts): solve ax² + bx + c = 0 by factorising, completing the square, or using x = (−b ± √(b²−4ac)) / 2a", "Vertex (turning point) at x = −b/2a; substitute back to find the corresponding y-coordinate", "The discriminant b² − 4ac tells how many real roots: positive = 2 roots; zero = 1 repeated root; negative = 0 real roots"] },
+        { name: "Exponential Functions", diff: "hard", summary: ["Form: y = a · bˣ where b > 0 and b ≠ 1; if b > 1 → exponential growth; if 0 < b < 1 → exponential decay", "The y-intercept is always (0, a) — the starting value of the quantity; the x-axis is a horizontal asymptote", "Applications: compound interest A = P(1 + r/n)^(nt), radioactive decay, bacterial population growth", "Key feature: exponential functions grow/decay by a constant multiplicative factor for each unit increase in x"] },
+        { name: "Transformations of Functions", diff: "hard", summary: ["Translation: y = f(x) + k shifts the graph up/down by k; y = f(x − h) shifts the graph right by h", "Reflection: y = −f(x) reflects in the x-axis; y = f(−x) reflects in the y-axis", "Dilation (stretch): y = af(x) stretches vertically by factor a; y = f(bx) compresses horizontally by factor b", "These transformations apply to all function types: linear, quadratic, exponential, sine, and cosine"] },
+        { name: "Solving and Graphing Linear Inequalities", diff: "medium", summary: ["Solve a linear inequality like an equation, but reverse the inequality sign when multiplying or dividing by a negative", "Number line representation: open circle ○ for strict inequalities (<, >); closed circle ● for ≤ or ≥", "Two-variable linear inequalities: graph the boundary line (dashed if strict, solid if ≤/≥) then shade the valid region", "Systems of inequalities (linear programming): the feasible region is the intersection of all shaded areas"] }
+      ]},
+      { name: "Unit 4: Geometry and Trigonometry", topics: [
+        { name: "Metric Conversions and Compound Measures", diff: "easy", summary: ["Length: 1 km = 1000 m; 1 m = 100 cm = 1000 mm — multiply when converting to smaller units", "Area: square the length conversion factor — 1 m² = 10,000 cm²; 1 km² = 1,000,000 m²", "Volume: cube it — 1 m³ = 1,000,000 cm³; also 1 litre = 1000 cm³ = 1 dm³", "Speed (compound measure) = distance ÷ time; density = mass ÷ volume — pay close attention to units throughout"] },
+        { name: "Perimeter, Area and Volume", diff: "medium", summary: ["2D areas: Rectangle = lw; Triangle = ½bh; Circle = πr²; Trapezium = ½(a+b)h; Parallelogram = bh", "3D volumes: Prism = cross-section area × length; Cylinder = πr²h; Pyramid = ⅓ × base area × height", "Cone: V = ⅓πr²h; Sphere: V = (4/3)πr³ — these formulas are often provided in MYP exams", "Surface area: unfold the shape into a net, calculate the area of every face, and add them together"] },
+        { name: "Triangle Properties and Angle Rules", diff: "easy", summary: ["Angles in any triangle sum to 180°; exterior angle of a triangle equals the sum of the two non-adjacent interior angles", "Equilateral: all sides and angles equal (60°); Isosceles: two equal sides and two equal base angles", "Angles in polygons: sum of interior angles = (n − 2) × 180° where n is the number of sides", "Angles on a straight line sum to 180°; angles around a point sum to 360°; vertically opposite angles are equal"] },
+        { name: "Similarity and Congruence", diff: "medium", summary: ["Congruent shapes: identical size and shape — same angles AND same side lengths (can be reflected or rotated)", "Similar shapes: same angles, proportional sides — the scale factor k relates corresponding lengths", "Scale factor effects: lengths scale by k; areas scale by k²; volumes scale by k³ — a powerful chain of relationships", "Congruence conditions: SSS, SAS, ASA/AAS, RHS — you must identify which condition applies to a given pair"] },
+        { name: "Coordinate Geometry", diff: "hard", summary: ["Distance formula: d = √[(x₂−x₁)² + (y₂−y₁)²] — derived directly from Pythagoras' theorem in 2D", "Midpoint formula: M = ((x₁+x₂)/2, (y₁+y₂)/2) — finds the exact centre between two points", "Gradient: m = (y₂−y₁)/(x₂−x₁) — rise over run; used to determine relationships between lines", "Finding the equation of a line: substitute one known point and the gradient into y − y₁ = m(x − x₁)"] },
+        { name: "Isometric Transformations", diff: "medium", summary: ["Reflection: every point maps to an equal perpendicular distance on the other side of the mirror line", "Rotation: every point moves the same angle around a fixed centre — describe the centre, angle, and direction", "Translation: every point moves by the same vector — described as a column vector (a over b)", "Enlargement: distances from the centre of enlargement are multiplied by scale factor k; k < 0 gives a rotation too"] },
+        { name: "Circle Geometry", diff: "hard", summary: ["Angle in a semicircle = 90° — the angle subtended by a diameter at any point on the circumference", "Tangent-radius theorem: the tangent at any point on a circle is perpendicular to the radius at that point", "Chord properties: perpendicular from the centre to a chord bisects the chord — and vice versa", "Arc length = (θ/360) × 2πr; Sector area = (θ/360) × πr² — both use the central angle θ in degrees"] },
+        { name: "Bearings", diff: "medium", summary: ["Bearings are measured clockwise from North using three digits — written as 045°, 270°, 360°/000°", "Always draw a North line at the starting point and measure the clockwise angle to the direction of travel", "Back bearing: if bearing A to B is x°, bearing B to A is (x + 180°) or (x − 180°) depending on which is in 0°–360°", "Combine bearings with trigonometry (SOHCAHTOA) and Pythagoras to calculate unknown distances and angles"] },
+        { name: "Pythagoras' Theorem", diff: "easy", summary: ["In a right-angled triangle: a² + b² = c² where c is the hypotenuse (the side opposite the right angle)", "To find hypotenuse: c = √(a² + b²); to find a shorter side: a = √(c² − b²) — rearrange before substituting", "Converse: if a² + b² = c², then the triangle is right-angled — used to verify or classify triangles", "3D Pythagoras: use it twice — first for a diagonal on the base, then for the final 3D diagonal"] },
+        { name: "Trigonometric Ratios (SOHCAHTOA)", diff: "medium", summary: ["SOH: sin θ = Opposite/Hypotenuse; CAH: cos θ = Adjacent/Hypotenuse; TOA: tan θ = Opposite/Adjacent", "Label the triangle relative to the angle in question — identify O, A, H before selecting the ratio", "To find a side: rearrange the ratio formula; to find an angle: use the inverse function (sin⁻¹, cos⁻¹, tan⁻¹)", "Always check your answer is reasonable — angles in a right triangle are between 0° and 90°"] }
+      ]},
+      { name: "Unit 5: Statistics and Probability", topics: [
+        { name: "Data Collection and Sampling Techniques", diff: "easy", summary: ["Random sample: every member of the population has an equal, independent chance of selection — minimises bias", "Stratified sample: divide the population into subgroups (strata) and sample proportionally from each stratum", "Systematic sample: choose every nth individual from an ordered list after a random starting point", "Bias: a sampling method is biased if certain groups are consistently over- or under-represented in the sample"] },
+        { name: "Measures of Central Tendency", diff: "easy", summary: ["Mean = sum of all values ÷ number of values — the balance point; sensitive to extreme outliers", "Median = middle value after sorting in order — use (n+1)/2 to find its position; resistant to outliers", "Mode = most frequently occurring value — the only average applicable to categorical (non-numerical) data", "For grouped data: use midpoints to estimate the mean; find the modal class and the class containing the median"] },
+        { name: "Measures of Dispersion: IQR and Range", diff: "hard", summary: ["Range = maximum − minimum — quick but unreliable as it is heavily distorted by outliers at the extremes", "Lower quartile Q1 = median of the lower half (25th percentile); Upper quartile Q3 = median of upper half (75th)", "IQR = Q3 − Q1 — measures the spread of the central 50% of data; not affected by outliers unlike the range", "Outlier rule: a value is a suspected outlier if it falls below Q1 − 1.5 × IQR or above Q3 + 1.5 × IQR"] },
+        { name: "Graphical Representations", diff: "medium", summary: ["Scatter graphs: plot paired data as coordinates to investigate correlation — positive, negative, or no correlation", "Box-and-whisker plots: display min, Q1, median, Q3, max — ideal for comparing two datasets' spread and centre", "Cumulative frequency: plot running total against upper class boundary; read Q1, median, Q3 from the S-curve", "Histograms: use frequency density (= frequency ÷ class width) on the y-axis when class widths are unequal"] },
+        { name: "Lines of Best Fit and Correlation", diff: "medium", summary: ["Line of best fit: a straight line through the mean point (x̄, ȳ) with roughly equal numbers of points on each side", "Positive correlation: both variables increase together; negative: one increases as the other decreases", "Strength: strong correlation means points lie close to the line; weak correlation means they are widely scattered", "Interpolation (within data range) is reliable; extrapolation (outside data range) is less reliable — state this clearly"] },
+        { name: "Probability of Simple Events", diff: "easy", summary: ["P(event) = number of favourable outcomes / total number of equally likely outcomes — between 0 and 1 inclusive", "P(A′) = 1 − P(A) — the complement rule: probability of event not occurring is 1 minus probability it does occur", "Listing outcomes: sample space diagrams (grids) systematically show all outcomes for two combined events", "Experimental probability ≈ theoretical probability as the number of trials increases — the law of large numbers"] },
+        { name: "Probability: Independent and Mutually Exclusive Events", diff: "hard", summary: ["Mutually exclusive: P(A ∩ B) = 0; Addition rule: P(A ∪ B) = P(A) + P(B) — events cannot occur simultaneously", "Independent events: P(A ∩ B) = P(A) × P(B) — the outcome of one event does not affect the other's probability", "General addition rule: P(A ∪ B) = P(A) + P(B) − P(A ∩ B) — subtract the overlap to prevent double counting", "Tree diagrams: multiply along branches (AND) and add between branches (OR) — a reliable method for complex problems"] },
+        { name: "Sets, Venn Diagrams and Probability", diff: "medium", summary: ["∈ = 'is an element of'; ξ = universal set (everything); A′ = complement (everything not in A)", "A ∪ B = union (in A or B or both); A ∩ B = intersection (in both A and B at the same time)", "Three-circle Venn diagrams: label all 8 regions systematically — start from the centre intersection and work outward", "Converting a Venn diagram into probabilities: divide each region's count by the total in the universal set ξ"] }
+      ]}
+    ]
+  },
+  biology: {
+    name: "Biology 🧬", subtitle: "Your Compiled MYP Biology Resources", color: "#4CAF50",
+    units: [
+      { name: "Unit: Biotechnology", topics: [
+        { name: "Applications of Genetic Engineering", diff: "hard", summary: ["Genetic engineering inserts, removes, or modifies specific genes using restriction enzymes and vector plasmids", "Insulin production: human insulin gene inserted into bacteria which produce human insulin cheaply at industrial scale", "GM crops: engineered for pest resistance (Bt cotton), drought tolerance, or improved nutrition (golden rice with β-carotene)", "Gene therapy aims to treat inherited disorders by delivering a functional copy of a faulty gene into patient cells"] },
+        { name: "Ethics in Biotechnology", diff: "medium", summary: ["Arguments for: increased crop yields, reduced pesticide use, life-saving medicines, treatment of genetic disease", "Arguments against: unknown ecosystem effects, loss of biodiversity, ethical concerns about 'designer' organisms and consent", "Cloning raises questions about genetic uniqueness, identity, and the moral status of cloned individuals", "Regulatory frameworks (WHO, national bodies) oversee approval, monitoring, and labelling of biotechnology products"] },
+        { name: "Bioprocessing and Industrial Uses", diff: "hard", summary: ["Fermentation uses microorganisms to convert organic substrates into useful products: ethanol, yogurt, antibiotics, enzymes", "Bioreactors maintain optimal conditions (temperature, pH, O₂ level, nutrient supply) for maximum microbial yield", "Industrial enzymes from microorganisms are used in biological detergents, food processing, and textile production", "Biofuels (bioethanol from sugarcane, biogas from waste) are renewable alternatives to fossil fuels produced biologically"] }
+      ]},
+      { name: "Unit: Chemistry of Life", topics: [
+        { name: "Cell Structure and Organelles", diff: "easy", summary: ["Prokaryotes (bacteria): no membrane-bound nucleus; DNA in nucleoid region; smaller (1–10 μm); no membrane organelles", "Eukaryotes (animals, plants, fungi): have a true nucleus; larger (10–100 μm); contain specialised membrane-bound organelles", "Mitochondria: site of aerobic respiration; produce ATP energy; have their own DNA and double membrane", "Ribosomes: site of protein synthesis in ALL cells; chloroplasts (plants only): site of photosynthesis; cell wall: rigid support in plants and fungi"] },
+        { name: "Biological Molecules", diff: "medium", summary: ["Carbohydrates: made of C, H, O in ratio 1:2:1; monosaccharides (glucose) → disaccharides → polysaccharides (starch, glycogen, cellulose)", "Proteins: long chains of amino acids linked by peptide bonds; 3D shape determines specific function (enzymes, antibodies, structural proteins)", "Lipids: fats (saturated, solid at room temperature) and oils (unsaturated, liquid); energy store; phospholipid bilayer of membranes", "Nucleic acids (DNA, RNA): carry genetic information; DNA = double helix; RNA = single strand; direct protein synthesis via transcription then translation"] },
+        { name: "Photosynthesis and Cellular Respiration", diff: "hard", summary: ["Photosynthesis: 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ — requires light energy absorbed by chlorophyll in chloroplasts", "Light-dependent reactions (thylakoids): water split, O₂ released, ATP and NADPH produced using light energy", "Aerobic respiration: C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O + ATP — produces up to 36–38 ATP molecules per glucose", "Anaerobic respiration: no O₂ — animals produce lactic acid; yeast produces ethanol + CO₂ — much less ATP produced"] }
+      ]},
+      { name: "Unit: Genetics and Human Health", topics: [
+        { name: "DNA Structure and Replication", diff: "medium", summary: ["DNA: double helix of two antiparallel polynucleotide strands; each nucleotide has phosphate, deoxyribose sugar, and a nitrogenous base", "Complementary base pairing: A–T (two hydrogen bonds); C–G (three hydrogen bonds) — ensures accurate copying", "Transcription: DNA template strand → mRNA in the nucleus; Translation: mRNA codons → amino acids at ribosomes → protein", "Semi-conservative replication: each new DNA molecule keeps one original strand — confirmed by the Meselson–Stahl experiment"] },
+        { name: "Inheritance Patterns (Mendelian Genetics)", diff: "hard", summary: ["Dominant alleles (capital letter) are expressed whenever present; recessive alleles only expressed when homozygous (both copies recessive)", "Homozygous = two identical alleles (AA or aa); Heterozygous = two different alleles (Aa) — carrier of the recessive allele", "Punnett squares predict probabilities of offspring genotypes and phenotypes from a genetic cross between two parents", "Codominance: both alleles expressed simultaneously (e.g. AB blood group); Incomplete dominance: blended intermediate phenotype (e.g. red × white → pink)"] },
+        { name: "Human Health and Genetic Disorders", diff: "medium", summary: ["Chromosomal disorders: incorrect chromosome number — Down syndrome (trisomy 21), Turner's syndrome (45,X)", "Single-gene autosomal disorders: cystic fibrosis (recessive); Huntington's disease (dominant) — inheritance follows Mendelian ratios", "Genetic screening identifies risk before birth (prenatal — amniocentesis, CVS) or in adulthood (carrier testing)", "Gene therapy: somatic (body cell) therapy treats the individual but is not inherited; germline therapy would be heritable"] }
+      ]},
+      { name: "Unit: Ecology", topics: [
+        { name: "Ecosystems and Food Webs", diff: "easy", summary: ["Ecosystem = all biotic factors (living organisms) + abiotic factors (light, temperature, water, soil pH) in a defined area", "Food chain: Producer → Primary consumer → Secondary consumer → Tertiary consumer — arrows show direction of energy transfer", "Food webs link multiple food chains — they better represent the complexity of real feeding relationships in an ecosystem", "Only about 10% of energy is transferred between trophic levels — the rest is lost as heat, used in respiration, or in faeces"] },
+        { name: "Population Dynamics", diff: "medium", summary: ["Biotic limiting factors: predation, disease, competition for food and mates, parasitism — affect population size directly", "Abiotic limiting factors: temperature, rainfall, light intensity, available water, space — set the environmental constraints", "Carrying capacity K: the maximum stable population size a habitat can sustainably support given available resources", "Predator-prey cycles: prey increases → predators increase → prey decreases → predators decrease → cycle repeats (Lotka-Volterra model)"] },
+        { name: "Human Impact on the Environment", diff: "medium", summary: ["Deforestation: reduces biodiversity, releases stored CO₂, increases soil erosion, and disrupts local hydrological cycles", "Eutrophication: fertiliser run-off enriches water → algal bloom → decomposers deplete O₂ → aquatic organisms die (dead zones)", "Enhanced greenhouse effect: increased CO₂, CH₄, and N₂O trap more infrared radiation → global warming → sea level rise", "Conservation strategies: national parks, captive breeding, seed banks, reforestation, sustainable fishing quotas, international agreements"] }
+      ]},
+      { name: "Unit: Organisation in Life", topics: [
+        { name: "Levels of Organisation", diff: "easy", summary: ["Cell → Tissue → Organ → Organ System → Organism — each level is composed of the level below it", "Tissue = a group of similar cells working together for one function (e.g. muscle tissue, nervous tissue, epithelial tissue)", "Organ = several different types of tissue working together as a structural unit (e.g. heart contains muscle, nervous, connective tissue)", "Emergent properties arise at each level — the heart pumps blood, a function no single cell type could achieve alone"] },
+        { name: "Human Organ Systems", diff: "medium", summary: ["Digestive system: mechanically and chemically breaks down food; absorbs nutrients into the bloodstream via the small intestine", "Circulatory system: the heart pumps blood through arteries (away from heart), veins (toward heart), and capillaries (exchange)", "Nervous system: brain and spinal cord process information and coordinate responses via electrical impulses along neurones", "Endocrine system: glands (pancreas, thyroid, adrenal) secrete hormones into the blood to regulate long-term physiological processes"] },
+        { name: "Plant Tissue Systems", diff: "medium", summary: ["Xylem: transports water and dissolved minerals upward from roots to leaves; made of dead lignified hollow cells", "Phloem: transports dissolved sugars (sucrose) from source (leaves) to sink tissues (roots, growing tips, fruits) — living cells", "Epidermis: protective outer layer; guard cells in stomata control gas exchange (CO₂/O₂) and water loss by transpiration", "Palisade mesophyll: tightly packed cells just below the upper epidermis; packed with chloroplasts to maximise photosynthesis"] }
+      ]},
+      { name: "Unit: Continuity and Evolution", topics: [
+        { name: "Natural Selection and Evolution", diff: "medium", summary: ["Variation exists in populations due to random mutations in DNA and the reshuffling of alleles during sexual reproduction (meiosis)", "Selection pressure: any environmental factor (predation, disease, climate, competition) that differentially affects survival and reproduction", "Individuals with advantageous traits are more likely to survive, reproduce, and pass those alleles to the next generation", "Over many generations, advantageous allele frequencies increase in the gene pool — this is how species evolve and adapt"] },
+        { name: "Sexual and Asexual Reproduction", diff: "easy", summary: ["Asexual reproduction: single parent, offspring are genetic clones — fast, energy-efficient, but produces no genetic variation", "Sexual reproduction: two parents, gametes formed by meiosis — offspring are genetically unique, providing variation for natural selection", "Meiosis: produces haploid gametes (n chromosomes) by two successive divisions — independent assortment and crossing over create variation", "Fertilisation: haploid sperm + haploid egg → diploid zygote (2n) — combines genetic material from both parents"] },
+        { name: "Evidence for Evolution", diff: "medium", summary: ["Fossil record: older rock strata contain simpler organisms; shows gradual morphological change over geological time", "Comparative anatomy: homologous structures (same underlying arrangement in different species) indicate descent from a common ancestor", "Molecular evidence: highly similar DNA base sequences and protein structures across species confirm close evolutionary relationships", "Biogeography: species distribution across continents supports continental drift and evolution from geographically isolated common ancestors"] }
+      ]},
+      { name: "Unit: Movement and Transport", topics: [
+        { name: "Diffusion, Osmosis and Active Transport", diff: "medium", summary: ["Diffusion: net movement of particles from high to low concentration down a concentration gradient — passive, no ATP required", "Osmosis: movement of water through a partially permeable membrane from a region of high water potential to low water potential", "Active transport: movement against the concentration gradient using carrier proteins + ATP — e.g. glucose absorption in the gut", "Factors affecting diffusion rate: steepness of gradient, surface area, temperature, membrane thickness, and particle size"] },
+        { name: "The Circulatory and Respiratory Systems", diff: "hard", summary: ["Double circulation: blood passes through the heart twice per complete circuit — pulmonary (lungs) and systemic (body) circuits", "Heart: right atrium and ventricle receive/pump deoxygenated blood to lungs; left side handles oxygenated blood to body", "Alveoli: adapted for gas exchange with large surface area, thin one-cell-thick walls, moist surface, and rich capillary network", "Blood components: erythrocytes carry O₂ (haemoglobin); leucocytes defend against pathogens; plasma transports dissolved substances; platelets for clotting"] },
+        { name: "Transport in Plants (Xylem and Phloem)", diff: "medium", summary: ["Water uptake: osmosis through root hair cells (large surface area increases absorption) → root cortex → xylem", "Transpiration pull: evaporation from leaf mesophyll creates a negative pressure that draws water up through the xylem (cohesion-tension theory)", "Transpiration rate increases with: higher temperature, lower humidity, increased light intensity, and greater wind speed", "Phloem translocation: sucrose actively loaded into phloem at source; flows to sink tissues where it is unloaded and used or stored"] }
+      ]},
+      { name: "Unit: Interactions", topics: [
+        { name: "Symbiosis and Competition", diff: "easy", summary: ["Mutualism: both species benefit — e.g. Rhizobium bacteria in root nodules fix nitrogen for the plant; plant provides sugars", "Commensalism: one species benefits, the other is unaffected — e.g. barnacles on whale skin gain transport; whale is unharmed", "Parasitism: parasite benefits at the host's expense — e.g. tapeworms in intestines, fleas on mammals, mistletoe on trees", "Competition for limited resources (food, water, territory, mates, light) drives natural selection and regulates community structure"] },
+        { name: "Homeostasis and Negative Feedback", diff: "hard", summary: ["Homeostasis: the maintenance of a stable internal environment (temperature, pH, glucose) despite changes in external conditions", "Negative feedback: deviation from set point triggers a response that counteracts and reverses the change, restoring equilibrium", "Thermoregulation: hypothalamus monitors blood temperature; sweating and vasodilation cool the body; shivering and vasoconstriction warm it", "Blood glucose: high glucose → beta cells release insulin → cells absorb glucose; low glucose → alpha cells release glucagon → liver releases glucose from glycogen"] },
+        { name: "The Nervous System and Response", diff: "medium", summary: ["Reflex arc: Stimulus → Receptor → Sensory neurone → Relay neurone (spinal cord) → Motor neurone → Effector → Response", "Reflexes are involuntary and bypass the brain — providing extremely fast, protective responses to potentially damaging stimuli", "Receptors are specialised by modality: photoreceptors (light), mechanoreceptors (touch/sound/pressure), chemoreceptors (taste/smell)", "Nervous system uses rapid electrical impulses; endocrine system uses slower chemical hormones — both maintain bodily coordination"] }
+      ]}
+    ]
+  },
+  chemistry: {
+    name: "Chemistry ⚗️", subtitle: "Your Compiled MYP Chemistry Resources", color: "#d9534f",
+    units: [
+      { name: "Topic 1: Matter and the Particle Model", topics: [
+        { name: "States of Matter: Solids, Liquids, Gases", diff: "easy", summary: ["Solid: fixed shape and volume; particles tightly packed in regular lattice; strong intermolecular forces; vibrate in fixed positions", "Liquid: fixed volume but no fixed shape; particles close but able to flow past each other; moderate intermolecular forces", "Gas: no fixed shape or volume; particles far apart in rapid random motion; negligible intermolecular forces; highly compressible", "The same substance can exist in all three states depending on temperature and pressure conditions"] },
+        { name: "Particle Model and Kinetic Theory", diff: "easy", summary: ["All matter is made of tiny particles in constant random motion — the basis of the kinetic theory", "Higher temperature = greater average kinetic energy of particles = faster motion", "Kinetic theory explains properties: solids are rigid (strong forces), gases fill containers (negligible forces)", "Pressure in a gas results from particles colliding with container walls — more collisions or harder collisions = more pressure"] },
+        { name: "Changes of State and Energy Transfer", diff: "medium", summary: ["Melting (solid→liquid) and boiling (liquid→gas) require energy input to overcome intermolecular forces", "Freezing (liquid→solid) and condensation (gas→liquid) release energy as intermolecular bonds form", "During a change of state, temperature stays constant — energy goes into changing potential energy not kinetic energy", "Heating curves show flat regions at melting and boiling points; steeper slopes indicate higher specific heat capacity"] },
+        { name: "Diffusion and Brownian Motion", diff: "easy", summary: ["Diffusion: net movement of particles from high concentration to low concentration — occurs in liquids and gases", "Rate of diffusion increases with: higher temperature, smaller particle size, greater concentration difference", "Brownian motion: random movement of small visible particles (e.g. pollen in water) caused by collisions with invisible molecules — evidence for particles", "Diffusion rate is much slower in liquids than gases because particles are closer together and collide more frequently"] },
+        { name: "Physical vs Chemical Changes", diff: "easy", summary: ["Physical change: no new substance formed; change is reversible; e.g. melting ice, dissolving salt, tearing paper", "Chemical change: new substance(s) formed with different properties; usually irreversible; e.g. burning, rusting, cooking", "Evidence of chemical change: colour change, gas produced, precipitate formed, temperature change, smell produced", "Physical changes alter the state or shape of a substance; chemical changes alter the chemical composition"] }
+      ]},
+      { name: "Topic 2: Pure Substances, Mixtures, and Separation", topics: [
+        { name: "Pure and Impure Substances", diff: "easy", summary: ["Pure substance: single element or compound with a definite, sharp melting/boiling point", "Impure substance (mixture): melting/boiling point range is broader and occurs at a different temperature than the pure substance", "Testing purity: sharp melting point = pure; range of temperatures = impure; use melting point apparatus", "Mixtures can be separated by physical methods; pure compounds can only be separated by chemical reactions"] },
+        { name: "Solutions, Colloids, and Suspensions", diff: "medium", summary: ["Solution: solute dissolved in solvent; homogeneous (uniform throughout); particles < 1 nm; transparent", "Colloid: particles 1–1000 nm; scatter light (Tyndall effect); appear cloudy; do not settle — e.g. milk, fog, jelly", "Suspension: larger particles > 1000 nm; heterogeneous; particles settle on standing; can be filtered — e.g. muddy water", "Identifying mixtures: Tyndall effect distinguishes colloids from solutions; filtration separates suspensions"] },
+        { name: "Solubility and Factors Affecting It", diff: "medium", summary: ["Solubility: maximum mass of solute that dissolves in 100 g of solvent at a given temperature (g/100g)", "Solubility of most solids increases with temperature; solubility of gases decreases with temperature (and increases with pressure)", "'Like dissolves like': polar solvents (water) dissolve polar/ionic substances; non-polar solvents dissolve non-polar substances", "Saturated solution: maximum solute dissolved; adding more solute at same T causes crystallisation"] },
+        { name: "Filtration, Evaporation, and Crystallisation", diff: "easy", summary: ["Filtration: separates insoluble solid from liquid; residue stays in filter paper; filtrate passes through", "Evaporation: removes solvent by heating; used to obtain dissolved solid (solute) from solution", "Crystallisation: slow cooling of a saturated solution produces large pure crystals — better than rapid evaporation", "Order of operations for recovering a dissolved solid: filter (if insoluble particles present) → evaporate to saturation → crystallise → filter and dry"] },
+        { name: "Distillation and Fractional Distillation", diff: "medium", summary: ["Simple distillation: separates solvent from solution; liquid heated, vapour condensed and collected — e.g. pure water from salt solution", "Fractional distillation: separates miscible liquids with different boiling points using a fractionating column", "Fractionating column creates a temperature gradient; liquid with lower boiling point rises higher and distils first", "Crude oil fractional distillation: petroleum gases (lowest bp) → petrol → kerosene → diesel → heavy oil → bitumen (highest bp)"] },
+        { name: "Chromatography and Applications", diff: "medium", summary: ["Paper/thin-layer chromatography: separates dissolved substances by their different affinities for stationary and mobile phases", "Rf value = distance moved by spot / distance moved by solvent front — used to identify substances", "Rf values are specific to a substance under given conditions; compare with known standards to identify unknowns", "Applications: testing food colourings, forensic ink analysis, testing for drugs in sport, checking purity of pharmaceuticals"] }
+      ]},
+      { name: "Topic 3: Atomic Structure and the Periodic Table", topics: [
+        { name: "Atoms, Elements, and Compounds", diff: "easy", summary: ["Element: substance made of only one type of atom; cannot be broken down by chemical reactions", "Compound: two or more elements chemically bonded in fixed ratios; properties differ from constituent elements", "Mixture: two or more substances not chemically combined; each retains its own properties; can be separated physically", "Over 118 elements exist; all ordinary matter is made from these elements combined in different ways"] },
+        { name: "Subatomic Particles", diff: "easy", summary: ["Proton: in nucleus; relative mass = 1; relative charge = +1; number defines the element", "Neutron: in nucleus; relative mass = 1; relative charge = 0; same element can have different neutron numbers (isotopes)", "Electron: orbits nucleus in shells; relative mass = 1/1840 (negligible); relative charge = −1; determines chemical behaviour", "Atoms are electrically neutral: number of protons = number of electrons in a neutral atom"] },
+        { name: "Atomic Number, Mass Number, and Isotopes", diff: "medium", summary: ["Atomic number (Z): number of protons — defines which element it is; unique for each element", "Mass number (A): total number of nucleons (protons + neutrons); A = Z + N where N = neutron number", "Isotopes: same Z, different A — same element, same chemistry, different nuclear properties (stability, mass)", "Relative atomic mass: weighted average of all isotope masses based on their percentage natural abundance"] },
+        { name: "Electron Configuration and Valency", diff: "medium", summary: ["Electrons fill shells in order: shell 1 holds max 2; shell 2 holds max 8; shell 3 holds max 8 (for first 20 elements)", "Electronic configuration written as numbers: e.g. Na = 2,8,1; Cl = 2,8,7; Ca = 2,8,8,2", "Valency = number of electrons an atom gains, loses, or shares to achieve a full outer shell (noble gas configuration)", "Group number (in periodic table) = number of outer electrons = typical valency for main group elements"] },
+        { name: "Periodic Table Layout", diff: "medium", summary: ["Elements arranged in order of increasing atomic number; periods = horizontal rows; groups = vertical columns", "Period number = number of occupied electron shells; group number = number of outer shell electrons (main groups)", "Metals on left and centre; non-metals on right; metalloids (semi-metals) along the staircase boundary", "Noble gases (Group 0/18): full outer shells; very unreactive; helium, neon, argon, krypton, xenon, radon"] },
+        { name: "Periodic Trends", diff: "hard", summary: ["Atomic radius: decreases across a period (more protons pull electrons closer); increases down a group (more shells)", "Reactivity of metals: increases down Group 1 (easier to lose 1 outer electron); decreases across period", "Reactivity of non-metals: increases up Group 7 (easier to gain 1 electron as nuclear attraction is stronger)", "Ionisation energy: energy to remove outermost electron; increases across period; decreases down group"] }
+      ]},
+      { name: "Topic 4: Chemical Bonding and Structure", topics: [
+        { name: "Ionic Bonding", diff: "medium", summary: ["Ionic bonding: electrostatic attraction between oppositely charged ions; forms between metals and non-metals", "Metal atoms lose electrons to form positive cations; non-metal atoms gain electrons to form negative anions", "Ionic compounds form giant lattice structures with high melting points and conduct electricity when molten or dissolved", "Examples: NaCl (Na⁺ and Cl⁻), MgO (Mg²⁺ and O²⁻), CaCl₂ (Ca²⁺ and 2Cl⁻)"] },
+        { name: "Covalent Bonding", diff: "medium", summary: ["Covalent bonding: shared pairs of electrons between non-metal atoms; both atoms achieve full outer shells", "Single bond: 1 shared pair; Double bond: 2 shared pairs; Triple bond: 3 shared pairs — multiple bonds are shorter and stronger", "Simple covalent molecules (H₂O, CO₂, CH₄): low melting points, do not conduct electricity", "Giant covalent structures (diamond, graphite, SiO₂): very high melting points; many strong covalent bonds throughout"] },
+        { name: "Metallic Bonding and Alloys", diff: "medium", summary: ["Metallic bonding: positive metal ions in a sea of delocalised electrons; electrons are free to move throughout", "Explains properties: electrical conductivity (mobile electrons), thermal conductivity, malleability, ductility (layers slide)", "Alloys: mixtures of metals (or metal + non-metal); irregular atom sizes distort lattice making it harder than pure metal", "Examples: brass (Cu + Zn), steel (Fe + C), bronze (Cu + Sn), stainless steel (Fe + Cr + Ni)"] },
+        { name: "Bond Strength, Melting Points, and Conductivity", diff: "hard", summary: ["Ionic: high melting point (strong lattice forces); conducts when molten or dissolved (free ions); solid does not conduct", "Simple covalent: low melting point (weak intermolecular forces between molecules); does not conduct (no free charges)", "Giant covalent: very high melting point (many strong covalent bonds); graphite conducts (delocalised electrons in layers)", "Metallic: variable melting point; excellent electrical and thermal conductors; malleable and ductile"] },
+        { name: "Writing and Naming Chemical Formulas", diff: "medium", summary: ["Chemical formula shows which elements are present and the ratio of atoms: H₂O = 2 hydrogen, 1 oxygen", "Ionic formula: balance charges to give overall zero charge; e.g. Al³⁺ and O²⁻ → Al₂O₃", "IUPAC naming: metal first, then non-metal with -ide ending; e.g. sodium chloride (NaCl), calcium oxide (CaO)", "Polyatomic ions: nitrate (NO₃⁻), sulfate (SO₄²⁻), carbonate (CO₃²⁻), hydroxide (OH⁻), ammonium (NH₄⁺)"] }
+      ]},
+      { name: "Topic 5: Chemical Reactions and Conservation of Mass", topics: [
+        { name: "What Happens in a Chemical Reaction", diff: "easy", summary: ["Chemical reactions involve breaking bonds in reactants and forming new bonds in products", "Atoms are rearranged but not created or destroyed — conservation of atoms (and therefore mass)", "Reactants → Products: chemical change produces substances with different properties from the reactants", "Activation energy: minimum energy needed to start a reaction; reactions proceed when collisions have ≥ activation energy"] },
+        { name: "Word and Balanced Chemical Equations", diff: "medium", summary: ["Word equation: reactants → products using names; e.g. hydrogen + oxygen → water", "Symbol equation: uses chemical formulas; must be balanced to obey conservation of mass", "Balancing: adjust coefficients (numbers in front of formulas) until atoms of each element are equal on both sides", "State symbols: (s) solid, (l) liquid, (g) gas, (aq) aqueous solution — always include in full equations"] },
+        { name: "Law of Conservation of Mass", diff: "easy", summary: ["In a closed system, total mass of reactants = total mass of products — atoms are neither created nor destroyed", "If mass appears to change in an open system: gas is released (mass decreases) or gas is absorbed (mass increases)", "Lavoisier's experiments established conservation of mass as a fundamental chemical law", "Quantitative chemistry relies on conservation of mass to calculate reacting masses and product yields"] },
+        { name: "Types of Chemical Reactions", diff: "medium", summary: ["Synthesis (combination): A + B → AB; two or more substances combine to form one product", "Decomposition: AB → A + B; one compound breaks down into simpler substances; often requires heat or light", "Displacement: more reactive element displaces less reactive one from a compound in solution", "Combustion: fuel + oxygen → oxides + energy; complete combustion produces CO₂ + H₂O; incomplete produces CO + soot"] },
+        { name: "Evidence of Chemical Change", diff: "easy", summary: ["Observable signs: colour change, precipitate (insoluble solid) forming, gas bubbles, temperature change, smell produced", "Temperature change: exothermic reactions feel warm; endothermic reactions feel cold (energy absorbed from surroundings)", "Permanent change: unlike physical changes, chemical changes are usually irreversible under normal conditions", "New substance test: measure melting point, conduct flame test, test for specific gases (CO₂ turns limewater milky; H₂ pops with burning splint)"] }
+      ]},
+      { name: "Topic 6: Quantitative Chemistry and Stoichiometry", topics: [
+        { name: "The Mole and Avogadro's Constant", diff: "hard", summary: ["One mole contains 6.02 × 10²³ particles (Avogadro's constant Nₐ) — this is the same for atoms, molecules, or ions", "Molar mass = mass of 1 mol of a substance in g/mol; numerically equal to relative atomic/formula mass", "n = m/M — moles = mass (g) ÷ molar mass (g/mol); rearrange: m = nM; M = m/n", "The mole links macroscopic measurements (mass we can weigh) to the microscopic world of atoms"] },
+        { name: "Calculating Relative Formula Mass", diff: "medium", summary: ["Relative formula mass (Mr): sum of relative atomic masses of all atoms in the formula", "Example: H₂SO₄ = 2(1) + 32 + 4(16) = 2 + 32 + 64 = 98 g/mol", "Percentage composition: (mass of element / Mr) × 100%; e.g. % oxygen in H₂O = 16/18 × 100 = 88.9%", "Empirical formula: simplest whole number ratio of atoms; molecular formula = multiple of empirical formula"] },
+        { name: "Reacting Mass Calculations", diff: "hard", summary: ["Use balanced equation to find mole ratio; then use n = m/M to convert between mass and moles", "Steps: write balanced equation → find mole ratio → calculate moles of known substance → use ratio → calculate mass of unknown", "Limiting reagent: the reactant that runs out first and determines the maximum product formed", "Excess reagent: the reactant remaining after the limiting reagent is fully consumed"] },
+        { name: "Concentration of Solutions", diff: "hard", summary: ["Concentration c = n/V — moles per dm³ (mol/dm³); also expressed as g/dm³", "Conversion: c (mol/dm³) = c (g/dm³) ÷ molar mass; volume must be in dm³ (1 dm³ = 1000 cm³ = 1 L)", "Dilution: c₁V₁ = c₂V₂ — moles of solute are conserved when diluting a solution", "Titration: determines unknown concentration; moles of acid = moles of base at equivalence point (if 1:1 ratio)"] },
+        { name: "Percentage Yield and Atom Economy", diff: "hard", summary: ["% yield = (actual yield / theoretical yield) × 100%; always < 100% due to incomplete reactions, losses, side reactions", "Theoretical yield: maximum mass of product calculated from stoichiometry and limiting reagent", "Atom economy = (Mr of desired product / total Mr of all products) × 100%; measures efficiency of a reaction", "High atom economy is preferred in green chemistry — fewer waste products, more sustainable, lower cost"] }
+      ]},
+      { name: "Topic 7: Energy Changes and Rates of Reaction", topics: [
+        { name: "Endothermic and Exothermic Reactions", diff: "medium", summary: ["Exothermic: energy released to surroundings; temperature of surroundings rises; ΔH is negative", "Endothermic: energy absorbed from surroundings; temperature of surroundings falls; ΔH is positive", "Examples exothermic: combustion, neutralisation, respiration, oxidation of metals, setting of concrete", "Examples endothermic: thermal decomposition, photosynthesis, dissolving ammonium nitrate, electrolysis"] },
+        { name: "Energy Profiles and Bond Energy", diff: "hard", summary: ["Energy profile diagram: reactants and products at different energy levels; peak = transition state (activation energy)", "Exothermic profile: products at lower energy than reactants; energy gap = ΔH (negative)", "Bond breaking is endothermic (energy in); bond forming is exothermic (energy out)", "Overall ΔH = energy needed to break bonds − energy released when bonds form; negative = exothermic"] },
+        { name: "Collision Theory and Activation Energy", diff: "medium", summary: ["Collision theory: reaction occurs only when particles collide with energy ≥ activation energy AND with correct orientation", "Activation energy Ea: minimum energy required for a successful collision that leads to reaction", "Catalyst provides an alternative reaction pathway with lower activation energy — more collisions can succeed", "Maxwell-Boltzmann distribution: shows range of particle energies; increasing T shifts curve right, more particles exceed Ea"] },
+        { name: "Factors Affecting Rate of Reaction", diff: "medium", summary: ["Temperature: higher T → faster particles → more frequent AND more energetic collisions → higher rate", "Concentration (solutions) / Pressure (gases): more particles per unit volume → more frequent collisions → higher rate", "Surface area: smaller particles → more surface exposed → more collisions → higher rate (powder reacts faster than lumps)", "Catalyst: provides lower activation energy pathway → more successful collisions without being consumed"] },
+        { name: "Reversible Reactions and Equilibrium", diff: "hard", summary: ["Reversible reaction: products can react to reform reactants; shown by ⇌ symbol", "Dynamic equilibrium: forward and reverse reactions occur at equal rates; concentrations remain constant (in closed system)", "Le Chatelier's Principle: if equilibrium is disturbed, it shifts to oppose the change and restore equilibrium", "Changes affecting equilibrium: concentration, temperature, pressure (for gases) — catalyst increases rate but does not shift equilibrium"] }
+      ]},
+      { name: "Topic 8: Acids, Bases, and Salts", topics: [
+        { name: "Properties of Acids and Bases", diff: "easy", summary: ["Acid: releases H⁺ ions in aqueous solution; pH < 7; turns blue litmus red; sour taste (e.g. HCl, H₂SO₄, HNO₃)", "Base: accepts H⁺ ions; alkali is a soluble base releasing OH⁻ ions in water; pH > 7; turns red litmus blue", "Strong acids: fully ionised in water (HCl, H₂SO₄, HNO₃); Weak acids: partially ionised (CH₃COOH, H₂CO₃)", "Strong bases: fully ionised (NaOH, KOH); Weak bases: partially ionised (NH₃, Ca(OH)₂ is sparingly soluble)"] },
+        { name: "Indicators and the pH Scale", diff: "easy", summary: ["pH scale: 0–14; pH 7 = neutral; pH < 7 = acidic; pH > 7 = alkaline; each unit represents 10× change in [H⁺]", "Litmus: red in acid, blue in alkali; Universal indicator: range of colours from red (strong acid) to purple (strong alkali)", "pH meter: gives precise pH values; more accurate than colour indicators", "Concentrated acid ≠ strong acid: concentration refers to amount of acid per volume; strength refers to degree of ionisation"] },
+        { name: "Neutralisation Reactions", diff: "medium", summary: ["Neutralisation: acid + base → salt + water; H⁺(aq) + OH⁻(aq) → H₂O(l)", "Complete neutralisation: pH = 7 (if strong acid + strong base); excess acid: pH < 7; excess alkali: pH > 7", "Titration determines exact volume of acid/alkali needed for complete neutralisation using an indicator", "Heat of neutralisation: energy released when acid and base react; measured in J/mol of water formed"] },
+        { name: "Acid Reactions", diff: "medium", summary: ["Acid + metal → salt + hydrogen gas; e.g. Zn + H₂SO₄ → ZnSO₄ + H₂ (test: H₂ burns with a squeaky pop)", "Acid + metal oxide/hydroxide → salt + water; e.g. CuO + 2HCl → CuCl₂ + H₂O", "Acid + metal carbonate → salt + water + CO₂; e.g. CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂ (test: limewater turns milky)", "Salt naming: hydrochloric → chloride; sulfuric → sulfate; nitric → nitrate; phosphoric → phosphate"] },
+        { name: "Preparing Soluble and Insoluble Salts", diff: "hard", summary: ["Soluble salts by neutralisation: add excess insoluble base/carbonate to acid, filter off excess, evaporate and crystallise", "Soluble salts by titration: use exact volumes; no excess solid to remove, evaporate carefully", "Insoluble salts by precipitation: mix two solutions containing the required ions; filter, wash, and dry the precipitate", "Solubility rules: all nitrates soluble; most chlorides soluble (except AgCl, PbCl₂); most sulfates soluble (except BaSO₄, PbSO₄)"] },
+        { name: "Titrations and Concentration Calculations", diff: "hard", summary: ["Titration procedure: fill burette with one solution; pipette known volume of other into conical flask; add indicator; add from burette until colour change", "At equivalence point: moles of acid = moles of alkali (for 1:1 reactions); n = cV where V must be in dm³", "Calculation: c₁V₁/n₁ = c₂V₂/n₂ where n₁ and n₂ are the stoichiometric coefficients from balanced equation", "Repeat titrations until concordant results (within 0.1 cm³); calculate mean of concordant values only"] }
+      ]},
+      { name: "Topic 9: Metals, Reactivity, and Extraction", topics: [
+        { name: "Reactivity Series of Metals", diff: "medium", summary: ["Order (most to least reactive): K > Na > Ca > Mg > Al > Zn > Fe > Pb > H > Cu > Ag > Au > Pt", "Reactivity indicates how readily a metal loses electrons; more reactive metals react more vigorously with water/acids", "Most reactive metals react with cold water; less reactive react with steam only; unreactive metals don't react with water", "Hydrogen is included in the series as a reference point: metals above H displace it from dilute acids"] },
+        { name: "Redox Reactions", diff: "hard", summary: ["Oxidation: loss of electrons (OIL); Reduction: gain of electrons (RIG); OIL RIG — always occur simultaneously", "Oxidation state: a measure of electron ownership; increases in oxidation, decreases in reduction", "Displacement reactions are redox: e.g. Fe + CuSO₄ → FeSO₄ + Cu; Fe is oxidised (0 → +2), Cu²⁺ is reduced (+2 → 0)", "Redox also describes reactions with oxygen: gaining oxygen = oxidised; losing oxygen = reduced"] },
+        { name: "Corrosion and Prevention", diff: "medium", summary: ["Rusting of iron: requires both oxygen AND water; Fe + O₂ + H₂O → hydrated iron(III) oxide (rust)", "Corrosion prevention: painting, oiling, galvanising (zinc coating), electroplating, sacrificial protection", "Sacrificial protection: more reactive metal (Zn, Mg) attached to iron; the more reactive metal corrodes preferentially", "Galvanising: coating iron with zinc; zinc layer physically protects AND acts sacrificially if layer is scratched"] },
+        { name: "Extraction of Metals", diff: "hard", summary: ["Metals above carbon in reactivity series (Na, Mg, Al, Ca, K) require electrolysis of molten compound for extraction", "Metals below carbon (Fe, Zn, Pb, Cu) can be extracted by reduction with carbon/carbon monoxide in a blast furnace", "Aluminium extraction: electrolysis of molten Al₂O₃ (dissolved in cryolite to lower melting point); huge energy cost", "Copper: extracted from sulfide ores by smelting; purified by electrolysis; also extracted by phytomining/bioleaching"] },
+        { name: "Uses of Metals and Alloys", diff: "easy", summary: ["Pure metals are often too soft for practical use; alloying introduces atoms of different size, disrupting regular lattice", "Steel (Fe + C): stronger than iron; stainless steel (Fe + Cr + Ni) resists corrosion — cutlery, surgical instruments", "Aluminium alloys: light and strong — aircraft, bicycle frames, drink cans; copper alloys (brass, bronze) — plumbing, coins", "Gold alloys: 24-carat = pure gold (too soft); 18-carat = 75% gold + 25% other metals for hardness in jewellery"] },
+        { name: "Electrochemical Cells", diff: "hard", summary: ["Simple electrochemical cell: two different metals in electrolyte; more reactive metal is negative electrode (anode in spontaneous cell)", "EMF (voltage) produced depends on the difference in reactivity between the two metals — larger difference = higher voltage", "Daniel cell: zinc in ZnSO₄ and copper in CuSO₄ connected by salt bridge; Zn is oxidised, Cu²⁺ is reduced", "Fuel cells: H₂ + O₂ → H₂O + electricity; more efficient than combustion; used in electric vehicles and spacecraft"] }
+      ]},
+      { name: "Topic 10: Organic Chemistry and Carbon Compounds", topics: [
+        { name: "Introduction to Organic Compounds", diff: "easy", summary: ["Organic compounds: contain carbon-carbon or carbon-hydrogen bonds; millions of compounds exist due to carbon's tetravalency", "Carbon forms 4 covalent bonds; can form chains, branches, and rings; unique ability to bond to itself extensively", "Main sources: crude oil (petroleum) and natural gas; also produced by living organisms", "Organic chemistry underpins fuels, medicines, plastics, dyes, food, and materials"] },
+        { name: "IUPAC Naming of Organic Compounds", diff: "hard", summary: ["Count the longest carbon chain: meth(1), eth(2), prop(3), but(4), pent(5), hex(6), hept(7), oct(8)", "Suffix indicates functional group: -ane (alkane), -ene (alkene), -ol (alcohol), -oic acid (carboxylic acid), -oate (ester)", "Number the chain from the end nearest to the substituent/functional group; use lowest possible locant numbers", "Branching: name substituent (methyl-, ethyl-, etc.) + its position number + main chain name; alphabetical order if multiple substituents"] },
+        { name: "Structural and Condensed Formulas", diff: "medium", summary: ["Molecular formula: shows total number of each type of atom — e.g. C₃H₈ (propane)", "Structural formula: shows all bonds between all atoms; makes bonding clear but takes more space to draw", "Condensed formula: shows groups of atoms without explicit bonds — e.g. CH₃CH₂CH₃ (propane)", "Isomers: same molecular formula but different structural arrangements; have different physical and chemical properties"] },
+        { name: "Hydrocarbons: Alkanes and Alkenes", diff: "medium", summary: ["Alkanes (CₙH₂ₙ₊₂): saturated (all single C-C bonds); unreactive except combustion and halogenation by substitution", "Alkenes (CₙH₂ₙ): unsaturated (contain C=C double bond); more reactive; undergo addition reactions", "Test for alkene: decolourise bromine water (orange → colourless) — addition reaction across the double bond", "Combustion of alkanes: complete → CO₂ + H₂O; incomplete → CO + soot + H₂O (less oxygen available)"] },
+        { name: "Homologous Series and Functional Groups", diff: "medium", summary: ["Homologous series: series of compounds with same general formula and functional group; differ by CH₂ unit", "Each series has similar chemical properties and a gradual change in physical properties (bp, mp increase with chain length)", "Functional group determines the characteristic reactions of an organic compound", "Key series: alkanes (no functional group), alkenes (C=C), alcohols (−OH), carboxylic acids (−COOH), esters (−COO−)"] },
+        { name: "Alcohols", diff: "medium", summary: ["Alcohols contain the −OH (hydroxyl) functional group; general formula CₙH₂ₙ₊₁OH for simple alcohols", "Methanol (CH₃OH), ethanol (C₂H₅OH), propanol (C₃H₇OH) — ethanol is the alcohol in alcoholic drinks", "Reactions: combustion (produces CO₂ + H₂O), oxidation to carboxylic acid, esterification with carboxylic acids", "Industrial production: fermentation of sugars (yeast + glucose → ethanol + CO₂) or hydration of ethene (acid catalyst)"] },
+        { name: "Carboxylic Acids", diff: "medium", summary: ["Carboxylic acids contain the −COOH functional group; weak acids that partially ionise in water", "Ethanoic acid (CH₃COOH): main component of vinegar; reacts with carbonates, metals, and bases like mineral acids", "Reactions: neutralisation (with bases/alkalis), esterification (with alcohols), reaction with carbonates (CO₂ produced)", "Formic acid (methanoic acid, HCOOH) is simplest; found in ant stings and stinging nettles"] },
+        { name: "Esterification and Naming Esters", diff: "hard", summary: ["Esterification: carboxylic acid + alcohol ⇌ ester + water; reversible reaction catalysed by concentrated H₂SO₄", "Ester name: alkyl group from alcohol + -yl, then acid name with -ic acid → -ate; e.g. ethanol + ethanoic acid → ethyl ethanoate", "Esters have characteristic fruity/pleasant smells; used as flavourings, perfumes, and solvents", "Hydrolysis (reverse): ester + water ⇌ acid + alcohol; acid or base catalysed (saponification with base produces soap)"] },
+        { name: "Polymers", diff: "medium", summary: ["Addition polymerisation: alkene monomers join together without losing any atoms; C=C opens to form backbone — e.g. ethene → poly(ethene)", "Condensation polymerisation: monomers join with loss of small molecules (H₂O or HCl); forms polyesters and polyamides (nylons)", "Plastics (synthetic polymers): durable, lightweight, cheap but most are non-biodegradable — major environmental problem", "Natural polymers: starch (glucose monomers), proteins (amino acid monomers), DNA (nucleotide monomers), rubber (isoprene)"] },
+        { name: "Fractional Distillation of Crude Oil", diff: "medium", summary: ["Crude oil (petroleum): mixture of hydrocarbons mainly alkanes; formed from ancient marine organisms over millions of years", "Fractionation separates by boiling point in a fractionating column with a temperature gradient", "Fractions (increasing carbon chain length/bp): refinery gas → petrol → naphtha → kerosene → diesel → fuel oil → bitumen", "Cracking: breaking long chain hydrocarbons into shorter, more useful molecules using heat + catalyst; produces alkenes for polymerisation"] }
+      ]},
+      { name: "Topic 11: Environmental and Atmospheric Chemistry", topics: [
+        { name: "Composition of the Atmosphere", diff: "easy", summary: ["Dry air composition: nitrogen (≈ 78%), oxygen (≈ 21%), argon (≈ 0.9%), carbon dioxide (≈ 0.04%), trace gases", "Water vapour: variable (0–4%) depending on temperature and location; not included in 'dry air' percentages", "Nitrogen: very unreactive due to strong N≡N triple bond; essential component; cycled by bacteria in soil", "Historical changes: early Earth atmosphere had little O₂; photosynthesis by early organisms increased O₂ over billions of years"] },
+        { name: "Combustion and Pollutant Formation", diff: "medium", summary: ["Complete combustion of hydrocarbons: CₙH₂ₙ₊₂ + excess O₂ → CO₂ + H₂O; requires sufficient oxygen", "Incomplete combustion (limited O₂): produces carbon monoxide (CO — toxic, colourless, odourless) and carbon (soot)", "Nitrogen oxides (NOₓ): formed at high temperatures in engines (N₂ + O₂ → NO → NO₂); cause acid rain and smog", "Sulfur dioxide (SO₂): from burning sulfur-containing fuels; causes acid rain; removed by flue gas desulfurisation"] },
+        { name: "Greenhouse Gases and Global Warming", diff: "medium", summary: ["Greenhouse gases (CO₂, CH₄, H₂O vapour, N₂O, O₃): absorb outgoing infrared radiation and re-emit in all directions", "Enhanced greenhouse effect: increased CO₂ (fossil fuels) and CH₄ (farming, landfill) trapping more heat", "Consequences: rising global temperatures, melting ice caps, rising sea levels, more extreme weather events, habitat loss", "Mitigation: reduce fossil fuel use, renewable energy, reforestation, CCS (carbon capture and storage), improve efficiency"] },
+        { name: "Acid Rain and Air Pollution", diff: "medium", summary: ["Acid rain: SO₂ and NOₓ dissolve in rainwater forming sulfurous, sulfuric, and nitric acids; pH < 5.6", "Effects: damage to limestone buildings and statues, killing fish in lakes, leaching nutrients from soil, harming forests", "SO₂ sources: burning coal and oil with sulfur impurities; removed by reacting with calcium oxide in flue gas desulfurisation", "Catalytic converters in cars: convert CO → CO₂ and NO → N₂ using platinum/rhodium catalysts"] },
+        { name: "Ozone Layer and CFCs", diff: "medium", summary: ["Ozone (O₃) in stratosphere absorbs harmful UV radiation from Sun — protects life from DNA damage and skin cancer", "CFCs (chlorofluorocarbons): used in aerosols and refrigerants; break down O₃ via radical chain reactions in stratosphere", "One CFC molecule can destroy thousands of O₃ molecules; ozone hole most severe over Antarctica", "Montreal Protocol (1987): international agreement to phase out CFCs; ozone layer slowly recovering"] },
+        { name: "Sustainability and Recycling", diff: "easy", summary: ["Recycling metals saves energy and raw materials: recycling aluminium uses 95% less energy than extraction from ore", "Life cycle assessment (LCA): evaluates environmental impact of a product from raw material extraction to disposal", "Bioplastics: made from renewable plant sources; some are biodegradable — more sustainable than petroleum-based plastics", "Reduce, Reuse, Recycle: hierarchy of waste management; reduction at source is most effective; landfill least preferred"] }
+      ]}
+    ]
+  },
+  physics: {
+    name: "Physics 🚀", subtitle: "Your Compiled MYP Physics Resources", color: "#f0ad4e",
+    units: [
+      { name: "Topic 1: Numbers and Units", topics: [
+        { name: "1.1 SI Units and Standard Prefixes", diff: "easy", summary: ["The SI system has 7 base units: metre (m), kilogram (kg), second (s), ampere (A), kelvin (K), mole (mol), candela (cd)", "Prefixes scale units by powers of 10: nano (10⁻⁹), micro (10⁻⁶), milli (10⁻³), centi (10⁻²), kilo (10³), mega (10⁶), giga (10⁹)", "Converting between prefixes: multiply or divide by the appropriate power of 10 — e.g. 5 km = 5000 m = 5 × 10³ m", "Derived units are combinations of base units: e.g. speed = m/s, force = kg·m/s² = N, pressure = N/m² = Pa"] },
+        { name: "1.2 Measuring Length and Time", diff: "easy", summary: ["Length is measured with rulers (mm precision), vernier callipers (0.1 mm), or micrometers (0.01 mm) depending on scale", "Time is measured with stopwatches; for short repeated intervals, measure multiple periods and divide to reduce human error", "Parallax error occurs when the eye is not directly in line with the scale — always read measurements perpendicularly", "Precision: smallest scale division; Accuracy: closeness to true value — both must be considered in any measurement"] },
+        { name: "1.3 Measuring Volume", diff: "easy", summary: ["Regular solids: use formula (e.g. V = l × w × h for cuboid; V = (4/3)πr³ for sphere)", "Liquids: read the bottom of the meniscus at eye level in a measuring cylinder placed on a flat surface", "Irregular solids: displacement method — submerge object in water, volume of solid = volume of water displaced", "Units: 1 cm³ = 1 mL; 1 dm³ = 1 L = 1000 cm³; 1 m³ = 10⁶ cm³ — always convert carefully before calculating"] },
+        { name: "1.4 Calculating and Measuring Mass", diff: "easy", summary: ["Mass is measured using a balance; it is a scalar quantity measured in kilograms (kg)", "Mass is the amount of matter in an object — it does not change with location (unlike weight)", "Electronic balances measure to 0.01 g precision; triple-beam balances require zeroing before use", "Mass ≠ weight: weight = mg and varies with gravitational field strength; mass is constant everywhere"] },
+        { name: "1.5 Density", diff: "medium", summary: ["Density: ρ = m/V — mass per unit volume; SI unit is kg/m³ (also expressed as g/cm³ for convenience)", "To find density: measure mass with balance, measure volume by formula or displacement, then divide", "Density determines whether objects float or sink: object floats if its density < density of the fluid", "Typical values: water = 1000 kg/m³; ice = 917 kg/m³ (floats); iron = 7874 kg/m³; air ≈ 1.2 kg/m³"] }
+      ]},
+      { name: "Topic 2: Motion", topics: [
+        { name: "2.1 Speed, Velocity, and Acceleration", diff: "easy", summary: ["Speed (scalar) = distance/time; Velocity (vector) = displacement/time — direction must be specified", "Average speed = total distance / total time; instantaneous speed = speed at one specific moment", "Acceleration: a = (v − u)/t — rate of change of velocity; unit m/s²; can be positive (speeding up) or negative (decelerating)", "Displacement is a vector: e.g. walking 5 m east then 5 m west gives displacement = 0 but distance = 10 m"] },
+        { name: "2.2 Motion Graphs", diff: "medium", summary: ["Distance-time graph: gradient = speed; horizontal line = stationary; upward slope = moving away; steeper = faster", "Velocity-time graph: gradient = acceleration; horizontal = constant velocity; area under graph = displacement", "Curved distance-time graph means changing speed (acceleration or deceleration)", "A negative gradient on a v-t graph means deceleration; the object is slowing down or reversing direction"] },
+        { name: "2.3 Equations of Motion", diff: "hard", summary: ["v = u + at — final velocity from initial velocity, acceleration and time", "s = ut + ½at² — displacement when acceleration is uniform", "v² = u² + 2as — useful when time is not given; links velocity, acceleration and displacement", "s = ½(u + v)t — displacement as average velocity × time; all four equations assume constant (uniform) acceleration"] },
+        { name: "2.4 Graphs Derived from Equations of Motion", diff: "hard", summary: ["From v = u + at: v-t graph is a straight line; gradient = a; y-intercept = u", "From s = ut + ½at²: s-t graph is a parabola (quadratic curve) when acceleration is constant", "Area under a v-t graph gives displacement — calculate using triangle or trapezium area formulas", "Gradient of a tangent to an s-t curve at any point gives instantaneous velocity at that moment"] },
+        { name: "2.5 Free Fall Motion", diff: "medium", summary: ["Free fall: object falls under gravity alone with no air resistance; acceleration = g ≈ 9.8 m/s² downward", "All objects in free fall (regardless of mass) accelerate at the same rate — Galileo's experiment demonstrated this", "Terminal velocity occurs when air resistance equals weight — net force = 0, acceleration = 0, constant speed", "On a v-t graph, free fall shows a straight line with gradient g; terminal velocity shows a horizontal line"] },
+        { name: "2.6 Projectile Motion", diff: "hard", summary: ["Projectile motion combines constant horizontal velocity (no force) with vertical free-fall acceleration (g downward)", "Horizontal: x = uₓt — no acceleration, constant velocity component throughout the flight", "Vertical: vy = uy + gt and y = uyt + ½gt² — uniform acceleration downward due to gravity", "The two components are independent — horizontal speed does not affect the time to fall vertically"] },
+        { name: "2.7 Relative Motion", diff: "medium", summary: ["Relative velocity: velocity of object A as observed from object B = vA − vB (vector subtraction)", "If two objects move in the same direction, relative speed = difference of their speeds", "If two objects move toward each other, relative speed = sum of their speeds", "Frame of reference matters: motion is always described relative to an observer's chosen reference frame"] }
+      ]},
+      { name: "Topic 3: Forces", topics: [
+        { name: "3.1 Types of Forces and Their Effects", diff: "easy", summary: ["Contact forces: friction, normal reaction, tension, drag, upthrust — require physical contact between objects", "Non-contact forces: gravity, electrostatic, magnetic — act across a distance without touching", "Forces are vectors — they have both magnitude and direction; must be added as vectors (free body diagrams)", "Net (resultant) force determines acceleration: balanced forces → constant velocity; unbalanced → acceleration"] },
+        { name: "3.2 Newton's Laws of Motion", diff: "medium", summary: ["1st Law: an object remains at rest or moves at constant velocity unless acted on by a resultant force (inertia)", "2nd Law: F = ma — resultant force = mass × acceleration; larger force or smaller mass gives more acceleration", "3rd Law: for every action force there is an equal, opposite reaction force on a different object", "Free body diagrams show all forces on one object; resolve forces into components to find the resultant"] },
+        { name: "3.3 Mass and Acceleration", diff: "medium", summary: ["From F = ma: for constant force, acceleration is inversely proportional to mass — doubling mass halves acceleration", "For constant mass, acceleration is directly proportional to force — doubling force doubles acceleration", "Experimental verification: trolley on a track with varying hanging masses and light gates to measure acceleration", "Mass is the measure of an object's inertia — resistance to change in motion"] },
+        { name: "3.4 Frictional Forces", diff: "easy", summary: ["Friction acts opposite to the direction of motion (or attempted motion) between surfaces in contact", "Static friction prevents motion; kinetic (sliding) friction acts during motion — kinetic friction < maximum static friction", "Friction depends on the nature of surfaces and the normal reaction force, not on the area of contact", "Friction is useful (braking, walking) but also causes energy loss as heat in machines"] },
+        { name: "3.5 Weight and Gravitational Force", diff: "easy", summary: ["Weight W = mg — gravitational force on an object; measured in newtons (N); g ≈ 9.8 N/kg on Earth", "Weight acts downward toward the centre of Earth; varies with location (weaker on Moon, zero in deep space)", "Mass is constant everywhere; weight changes with gravitational field strength g", "Gravitational field strength g = force per unit mass = W/m; on Moon g ≈ 1.6 N/kg"] },
+        { name: "3.6 Momentum, Conservation, and Impulse", diff: "hard", summary: ["Momentum: p = mv (kg·m/s) — a vector quantity in the direction of velocity", "Law of conservation of momentum: total momentum before collision = total momentum after (closed system)", "Impulse = FΔt = Δp — change in momentum equals the force multiplied by the time it acts", "Impulse explains why airbags and crumple zones reduce injury — increasing contact time reduces peak force"] },
+        { name: "3.7 Collision and Explosion", diff: "hard", summary: ["Elastic collision: both momentum AND kinetic energy are conserved — objects bounce apart", "Inelastic collision: momentum is conserved but kinetic energy is NOT (lost as heat/sound) — objects may stick", "Explosion: two objects start at rest (total momentum = 0); they fly apart with equal and opposite momenta", "In all cases: Σp_before = Σp_after, but KE is only conserved in perfectly elastic collisions"] },
+        { name: "3.8 Circular Motion and Centripetal Force", diff: "hard", summary: ["An object moving in a circle at constant speed is still accelerating because its direction constantly changes", "Centripetal acceleration always points toward the centre of the circle: a = v²/r", "Centripetal force = mv²/r — provided by tension (string), gravity (orbit), friction (car on a bend), or normal force", "If centripetal force is removed, the object flies off in a straight line tangent to the circle (Newton's 1st Law)"] },
+        { name: "3.9 Turning Effects of Forces (Moment)", diff: "medium", summary: ["Moment of a force = force × perpendicular distance from pivot: M = Fd; unit = N·m", "Principle of moments: for a body in equilibrium, sum of clockwise moments = sum of anticlockwise moments", "Perpendicular distance means the shortest distance from the pivot to the line of action of the force", "Increasing the distance from the pivot increases the turning effect for the same force — e.g. using a longer spanner"] },
+        { name: "3.10 Levers and Torque", diff: "medium", summary: ["A lever is a rigid bar that rotates about a pivot (fulcrum); used to multiply force or increase speed/distance", "Three classes: Class 1 (pivot between effort and load), Class 2 (load between pivot and effort), Class 3 (effort between pivot and load)", "Mechanical advantage = load / effort — a lever with MA > 1 requires less effort to move a larger load", "Torque is the rotational equivalent of force; τ = Fr; a couple consists of two equal, opposite, parallel forces"] },
+        { name: "3.11 Centre of Mass", diff: "medium", summary: ["Centre of mass: the single point where the entire weight of an object can be considered to act", "For a uniform symmetrical object, the centre of mass is at the geometric centre", "Stability: an object topples if its centre of mass moves outside its base of support", "Lower centre of mass and wider base = greater stability — e.g. racing cars have low profiles and wide wheelbases"] },
+        { name: "3.12 Hooke's Law", diff: "medium", summary: ["Hooke's Law: F = kx — extension is directly proportional to applied force, up to the elastic limit", "k is the spring constant (N/m): stiffer spring = larger k; softer spring = smaller k", "Beyond the elastic limit: the material deforms plastically and does not return to its original length", "The elastic limit is shown on a force-extension graph where the straight line ends and the curve begins"] },
+        { name: "3.13 Stretching and Compressing Materials", diff: "medium", summary: ["Elastic deformation: material returns to original shape when force is removed (within elastic limit)", "Plastic deformation: material is permanently changed when force exceeds the elastic limit", "Stress = F/A (Pa); Strain = extension/original length (dimensionless) — fundamental material properties", "Stiff materials have high Young's modulus (large stress for small strain); rubber has low Young's modulus"] }
+      ]},
+      { name: "Topic 4: Pressure", topics: [
+        { name: "4.1 Pressure in Solids", diff: "easy", summary: ["Pressure = Force / Area: P = F/A; unit is pascal (Pa = N/m²)", "Same force on smaller area → greater pressure (e.g. sharp knife, stiletto heels, drawing pins)", "To reduce pressure: increase contact area (e.g. snowshoes, caterpillar tracks on tanks)", "Pressure acts perpendicular to the surface on which the force acts"] },
+        { name: "4.2 Pressure in Liquids", diff: "medium", summary: ["Pressure in a liquid: P = ρgh — increases with depth (h), density (ρ), and gravitational field strength (g)", "Pressure acts equally in all directions at the same depth in a static liquid", "A liquid surface is always horizontal (at rest); pressure depends only on vertical depth, not shape of container", "Pressure difference between two depths: ΔP = ρgΔh — used in manometers and blood pressure measurement"] },
+        { name: "4.3 Hydraulic Systems (Pascal's Principle)", diff: "medium", summary: ["Pascal's Principle: pressure applied to an enclosed fluid is transmitted equally in all directions", "Hydraulic advantage: F₂/F₁ = A₂/A₁ — larger piston area means larger output force for same input pressure", "Applications: hydraulic brakes, car jacks, excavator arms, aircraft landing gear", "Hydraulic fluid is incompressible (unlike gases) — pressure is transmitted instantly without loss"] },
+        { name: "4.4 Atmospheric Pressure", diff: "easy", summary: ["Atmospheric pressure ≈ 101,325 Pa (1 atm) at sea level — caused by the weight of air above", "Atmospheric pressure decreases with altitude — less air above means less weight pressing down", "Demonstrated by: crushing can experiment, suction cups, syringe, Magdeburg hemispheres", "Barometers measure atmospheric pressure; mercury barometer: height of mercury column ≈ 760 mm at sea level"] },
+        { name: "4.5 Gas Pressure and Volume (Boyle's Law)", diff: "medium", summary: ["Boyle's Law: P₁V₁ = P₂V₂ at constant temperature — pressure and volume are inversely proportional", "Increasing volume of a gas decreases pressure (fewer collisions per unit area with container walls)", "Kinetic model: gas pressure results from molecules colliding with container walls; more collisions = higher pressure", "Graph of P vs 1/V is a straight line through the origin; graph of P vs V is a hyperbola"] }
+      ]},
+      { name: "Topic 5: Work and Energy", topics: [
+        { name: "5.1 Work", diff: "easy", summary: ["Work done: W = Fd cosθ — force × displacement × cosine of angle between them; unit = joule (J)", "Work is only done when a force causes displacement in the direction of the force", "If force is perpendicular to displacement, no work is done (e.g. carrying a bag horizontally)", "Work-energy theorem: net work done on an object equals its change in kinetic energy"] },
+        { name: "5.2 Kinetic Energy", diff: "easy", summary: ["Kinetic energy: KE = ½mv² — depends on mass and the square of speed", "Doubling mass doubles KE; doubling speed quadruples KE — speed has a much greater effect", "KE is always positive (scalar); it depends on the speed, not the direction of motion", "Work done against friction converts KE to thermal energy — this energy cannot be fully recovered"] },
+        { name: "5.3 Gravitational Potential Energy", diff: "easy", summary: ["Gravitational PE: GPE = mgh — mass × g × height above reference level", "GPE increases as an object is raised; it is converted to KE as the object falls", "Reference level (h = 0) can be chosen at any point — only changes in GPE matter in calculations", "At the bottom of a fall (no air resistance): all GPE converted to KE → ½mv² = mgh → v = √(2gh)"] },
+        { name: "5.4 Energy Transformation and Conservation", diff: "medium", summary: ["Law of conservation of energy: energy cannot be created or destroyed, only converted between forms", "Common transformations: chemical → thermal (burning), electrical → light (bulb), KE → GPE (ball thrown up)", "In real systems, some energy is always lost as thermal energy (heat) due to friction or resistance", "Sankey diagrams represent energy transformations — width of arrow proportional to amount of energy"] },
+        { name: "5.5 Power and Efficiency", diff: "medium", summary: ["Power: P = W/t = Fv — rate of doing work or transferring energy; unit = watt (W = J/s)", "Efficiency = (useful output energy / total input energy) × 100% — always less than 100%", "Low efficiency means more energy is wasted as heat, sound, or light; machines are designed to maximise efficiency", "Power output of a motor can be tested by lifting known masses over measured heights in measured times"] }
+      ]},
+      { name: "Topic 6: Thermal Physics", topics: [
+        { name: "6.1 Simple Kinetic Molecular Model", diff: "easy", summary: ["All matter consists of tiny particles in constant random motion — the basis of kinetic theory", "Solid: strong forces, fixed positions, vibrate only; Liquid: weaker forces, flow freely; Gas: negligible forces, random rapid motion", "Temperature is a measure of average kinetic energy of particles — higher temperature = faster particles", "Absolute zero (0 K = −273°C): theoretical point where all particle motion ceases; particles have minimum energy"] },
+        { name: "6.2 The Gas Laws", diff: "hard", summary: ["Boyle's Law: P ∝ 1/V at constant T — PV = constant; halving volume doubles pressure", "Charles's Law: V ∝ T at constant P — volume proportional to absolute temperature (in kelvin)", "Pressure Law: P ∝ T at constant V — pressure proportional to absolute temperature", "Combined gas law: P₁V₁/T₁ = P₂V₂/T₂ — always use Kelvin temperature (K = °C + 273)"] },
+        { name: "6.3 Thermal Properties and Temperature", diff: "easy", summary: ["Temperature measures average kinetic energy of particles; thermal energy (heat) is total internal energy", "Celsius scale: 0°C = melting point of water; 100°C = boiling point; Kelvin scale: 0 K = absolute zero", "Conversion: T(K) = T(°C) + 273; thermal energy flows from higher to lower temperature regions", "Thermal equilibrium: reached when two objects in contact reach the same temperature with no net heat flow"] },
+        { name: "6.4 Expansion of Solids, Liquids, and Gases", diff: "easy", summary: ["Most materials expand when heated — particles vibrate more, pushing each other further apart", "Gases expand most, liquids less, solids least for the same temperature change", "Applications: bimetallic strips (thermostat), expansion gaps in bridges/railways, liquid-in-glass thermometers", "Water is anomalous: it expands between 0°C and 4°C — maximum density at 4°C; ice is less dense than water"] },
+        { name: "6.5 Thermometers and Temperature Measurement", diff: "easy", summary: ["Liquid-in-glass thermometer: liquid expands up a narrow bore as temperature rises — requires a fixed scale", "Thermocouple thermometer: voltage produced at junction of two metals changes with temperature — fast response", "Fixed points: ice point (0°C) and steam point (100°C) used to calibrate a Celsius thermometer", "Clinical thermometers have a constriction to retain maximum temperature reading after removal from patient"] },
+        { name: "6.6 Specific Heat Capacity", diff: "hard", summary: ["Specific heat capacity c: energy needed to raise 1 kg by 1°C; Q = mcΔT; unit: J/(kg·°C)", "Water has a high SHC (4200 J/kg°C) — ideal for cooling systems and central heating", "Metals have low SHC — they heat up and cool down quickly (useful for cooking utensils)", "Experimental determination: electrical heater in known mass of liquid; measure temperature rise and energy input (E = IVt)"] },
+        { name: "6.7 Specific Latent Heat", diff: "hard", summary: ["Latent heat: energy absorbed or released during a change of state with no temperature change", "Specific latent heat of fusion Lf: energy per kg to melt a solid (or freeze a liquid) at its melting point", "Specific latent heat of vaporisation Lv: energy per kg to vaporise a liquid (or condense a vapour); Q = mL", "During a change of state, energy goes into breaking intermolecular bonds, not increasing kinetic energy"] },
+        { name: "6.8 Thermal Processes", diff: "medium", summary: ["Heating curve: flat sections show changes of state (melting, boiling) where temperature stays constant", "During melting: energy input breaks bonds between solid particles — temperature stays at melting point", "During boiling: energy input overcomes intermolecular attraction to vaporise liquid — temperature stays constant", "Cooling curve: same shape in reverse — flat sections show solidification and condensation releasing latent heat"] },
+        { name: "6.9 Heat Transfer: Conduction, Convection, Radiation", diff: "medium", summary: ["Conduction: vibrating particles transfer energy through direct contact; best in dense solids, especially metals (free electrons)", "Convection: hot fluid rises (less dense), cool fluid sinks — circular convection currents transfer thermal energy", "Radiation: infrared EM waves transfer energy through vacuum or air; dark matt surfaces emit/absorb best", "Vacuum flasks reduce all three: evacuated walls (no conduction/convection), silvered walls (reduce radiation)"] }
+      ]},
+      { name: "Topic 7: Light", topics: [
+        { name: "7.1 Light Rays and Ray Diagrams", diff: "easy", summary: ["Light travels in straight lines (rays); evidence: shadows, pinhole cameras, eclipses", "Ray diagrams represent the direction of light travel using arrows on straight lines", "A point source produces sharp shadows; an extended source produces umbra (full shadow) and penumbra (partial shadow)", "Speed of light in vacuum: c = 3 × 10⁸ m/s — fastest possible speed; slows down in denser media"] },
+        { name: "7.2 Reflection of Light", diff: "easy", summary: ["Law of reflection: angle of incidence = angle of reflection, both measured from the normal to the surface", "Normal is a line perpendicular to the reflecting surface at the point of incidence", "Plane mirror image: virtual (cannot be projected), upright, same size as object, laterally inverted, same distance behind mirror", "Diffuse reflection from rough surfaces scatters light in many directions; specular reflection from smooth surfaces follows law of reflection"] },
+        { name: "7.3 Refraction of Light", diff: "medium", summary: ["Refraction: light changes speed and direction when passing between media of different optical densities", "Snell's Law: n₁ sinθ₁ = n₂ sinθ₂; refractive index n = speed in vacuum / speed in medium = c/v", "Light bends toward the normal when entering a denser medium (e.g. air → glass); away when entering less dense", "Refractive index of glass ≈ 1.5; water ≈ 1.33; diamond ≈ 2.42 — higher n means greater bending"] },
+        { name: "7.4 Total Internal Reflection and Critical Angle", diff: "hard", summary: ["TIR occurs when light tries to pass from dense to less dense medium at angle ≥ critical angle", "Critical angle θc: sin θc = 1/n (for medium to air) — the angle at which refracted ray is exactly 90°", "Above the critical angle, all light reflects back internally — no refraction occurs", "Applications: optical fibres (communications, endoscopes), diamond sparkle (very small critical angle ≈ 24°)"] },
+        { name: "7.5 Lenses", diff: "hard", summary: ["Convex (converging) lens: thicker at centre; brings parallel rays to a focus at the focal point F", "Concave (diverging) lens: thinner at centre; spreads parallel rays as if diverging from a virtual focal point", "Ray diagram rules for convex lens: ray through centre passes straight; ray parallel to axis refracts through F; ray through F refracts parallel", "Real image: formed where rays actually meet (can be projected); Virtual image: rays appear to diverge from it (cannot be projected)"] },
+        { name: "7.6 Electromagnetic Radiation", diff: "medium", summary: ["EM spectrum (increasing frequency/energy): radio, microwave, infrared, visible, ultraviolet, X-ray, gamma ray", "All EM waves travel at c = 3 × 10⁸ m/s in vacuum; they are transverse waves requiring no medium", "Frequency and wavelength: c = fλ — higher frequency means shorter wavelength and more energy per photon", "Each type has specific applications: radio (communications), microwave (cooking, radar), UV (sterilisation), X-ray (imaging), gamma (cancer treatment)"] }
+      ]},
+      { name: "Topic 8: Sound", topics: [
+        { name: "8.1 Sound Waves", diff: "easy", summary: ["Sound is a longitudinal mechanical wave — particles vibrate parallel to the direction of wave travel", "Sound requires a medium (solid, liquid, or gas) to travel; it cannot travel through a vacuum", "Produced by vibrating objects (vocal cords, speakers, strings); the vibrations create compressions and rarefactions", "Compressions: regions of high pressure and high particle density; Rarefactions: regions of low pressure and low density"] },
+        { name: "8.2 Speed of Sound and Its Measurement", diff: "medium", summary: ["Speed of sound in air ≈ 340 m/s; faster in water ≈ 1500 m/s; even faster in solids (e.g. steel ≈ 5000 m/s)", "Sound travels faster in denser/stiffer media because particles are closer together and transmit vibrations more quickly", "Measurement: echo method — s = vt/2 (distance = speed × half the time for echo to return)", "Experiment: two microphones connected to an oscilloscope; measure time delay as sound passes between them"] },
+        { name: "8.3 Echoes and Reflection of Sound", diff: "easy", summary: ["Echo: reflection of sound from a hard surface; heard as a distinct repeat of the original sound", "For an echo to be heard separately, the reflected sound must arrive at least 0.1 s after the original", "Reverberation: multiple echoes that overlap and extend the duration of the sound in enclosed spaces", "Applications: SONAR (underwater distance measurement), medical ultrasound, room acoustics design"] },
+        { name: "8.4 Characteristics of Sound", diff: "medium", summary: ["Pitch: determined by frequency — higher frequency = higher pitch; human hearing range: 20 Hz to 20,000 Hz", "Loudness: determined by amplitude — greater amplitude = louder sound; measured in decibels (dB)", "Timbre (quality): determined by the mixture of frequencies (overtones) — distinguishes instruments playing same note", "Oscilloscope displays: x-axis = time, y-axis = displacement; can read frequency (T = 1/f) and amplitude directly"] },
+        { name: "8.5 Ultrasound and Its Applications", diff: "medium", summary: ["Ultrasound: sound with frequency > 20,000 Hz (above human hearing range)", "Medical imaging: ultrasound pulses reflected from tissue boundaries; time delay gives distance to boundary", "Advantages over X-rays: no ionising radiation, can image soft tissue, safe for foetal scanning", "Other uses: industrial flaw detection in metals, sonar, cleaning delicate objects, breaking kidney stones"] }
+      ]},
+      { name: "Topic 9: Waves", topics: [
+        { name: "9.1 Longitudinal and Transverse Waves", diff: "easy", summary: ["Transverse waves: particle displacement is perpendicular to wave travel direction — e.g. light, water ripples, EM waves", "Longitudinal waves: particle displacement is parallel to wave travel direction — e.g. sound, seismic P-waves", "Both types transfer energy without net transfer of matter — the medium oscillates but does not travel", "Transverse waves can be polarised (vibrations in one plane); longitudinal waves cannot be polarised"] },
+        { name: "9.2 Mechanical vs Electromagnetic Waves", diff: "easy", summary: ["Mechanical waves require a medium to travel (sound, water waves, seismic waves) — cannot travel in vacuum", "Electromagnetic waves do not require a medium — they can travel through a vacuum at speed c = 3 × 10⁸ m/s", "All EM waves are transverse; mechanical waves can be transverse (water) or longitudinal (sound)", "EM waves are produced by oscillating electric and magnetic fields; mechanical waves require oscillating particles"] },
+        { name: "9.3 Properties of Waves", diff: "medium", summary: ["Wave equation: v = fλ — wave speed = frequency × wavelength; applies to all types of wave", "Amplitude: maximum displacement from equilibrium — determines energy carried by the wave", "Period T = 1/f — time for one complete oscillation; frequency f measured in hertz (Hz)", "Wavefronts: lines connecting points of equal phase; rays are perpendicular to wavefronts showing direction of travel"] },
+        { name: "9.4 Wave Phenomena: Diffraction", diff: "hard", summary: ["Diffraction: spreading of waves when they pass through a gap or around an obstacle", "Maximum diffraction occurs when gap width ≈ wavelength — waves spread most when λ ≈ gap size", "Long wavelengths (low frequency) diffract more than short wavelengths — explains why AM radio bends around hills", "Diffraction gratings use many slits to produce sharp interference patterns; used in spectroscopy"] },
+        { name: "9.5 Electromagnetic Spectrum", diff: "medium", summary: ["In order of increasing frequency (decreasing wavelength): radio → microwave → IR → visible → UV → X-ray → gamma", "All EM waves travel at c = 3 × 10⁸ m/s in vacuum; wavelengths range from > 1 km (radio) to < 10⁻¹² m (gamma)", "Visible light: wavelengths 400 nm (violet) to 700 nm (red); ROY G BIV in order of increasing wavelength", "Higher frequency = higher photon energy = more ionising and more dangerous to living tissue"] },
+        { name: "9.6 Wave Imaging and Real-Life Applications", diff: "medium", summary: ["X-rays: ionising, penetrate soft tissue but absorbed by bone/metal — used in medical and security imaging", "Ultrasound: non-ionising, reflects at tissue boundaries — medical imaging, foetal scans, industrial testing", "Radar: microwave pulses reflected off aircraft/ships — measures distance by timing return pulse (d = vt/2)", "Seismic waves: P-waves (longitudinal) and S-waves (transverse) travel through Earth — used to study Earth's interior"] }
+      ]},
+      { name: "Topic 10: Electromagnetism", topics: [
+        { name: "10.1 Electric Charge and Electrons", diff: "easy", summary: ["Charge is a fundamental property of matter; protons carry +e, electrons carry −e where e = 1.6 × 10⁻¹⁹ C", "Like charges repel; unlike charges attract — the electric force follows an inverse-square law", "Conductors allow charge to flow freely (metals have delocalised electrons); insulators do not", "Conservation of charge: total charge is conserved in any process — cannot be created or destroyed"] },
+        { name: "10.2 Static Electricity and Charging Methods", diff: "easy", summary: ["Charging by friction: electrons transferred between materials — one gains electrons (−), one loses (+)", "Charging by induction: a charged object brought near a conductor causes charge redistribution without contact", "Electroscope detects charge: leaves diverge when charged; can determine sign by observing response to known charges", "Static electricity applications: photocopiers, laser printers, electrostatic paint spraying, dust precipitators"] },
+        { name: "10.3 Electric Force", diff: "medium", summary: ["Coulomb's Law: F = kq₁q₂/r² — force between two point charges proportional to product of charges, inversely proportional to distance²", "k = 9 × 10⁹ N·m²/C² (Coulomb's constant); force is attractive for unlike charges, repulsive for like charges", "Electric force is one of the four fundamental forces; much stronger than gravity at atomic scales", "The electric force is responsible for chemical bonding and the structure of atoms and molecules"] },
+        { name: "10.4 Electric Fields and Field Line Diagrams", diff: "medium", summary: ["Electric field: region where a charged particle experiences a force; field strength E = F/q (N/C or V/m)", "Field lines go from + to −; closer lines = stronger field; lines never cross or start/end in mid-air", "Uniform field between parallel plates: field lines are parallel and evenly spaced; E = V/d", "Radial field around a point charge: field lines radiate outward (+) or inward (−); field strength decreases with distance²"] },
+        { name: "10.5 Current in a Simple Circuit", diff: "easy", summary: ["Electric current I = Q/t — charge per unit time; unit = ampere (A); conventional current flows + to −", "Charge carriers in metals are electrons (flowing − to +); conventional current is defined opposite to electron flow", "Ammeter measures current — connected in series; it has very low resistance to avoid affecting the circuit", "A complete circuit is needed for current to flow; switch breaks the circuit to stop current"] },
+        { name: "10.6 Potential Difference", diff: "easy", summary: ["Potential difference (voltage) V = W/Q — energy transferred per unit charge; unit = volt (V = J/C)", "EMF (electromotive force): energy supplied per unit charge by a source (battery, generator)", "Voltmeter measures potential difference — connected in parallel; it has very high resistance", "The p.d. across a component drives the current through it; energy is transferred from electrical to other forms"] },
+        { name: "10.7 Resistance and Ohm's Law", diff: "medium", summary: ["Resistance R = V/I — opposition to current flow; unit = ohm (Ω)", "Ohm's Law: V = IR — for an ohmic conductor at constant temperature, current is proportional to voltage", "Ohmic conductors: metals at constant temperature; Non-ohmic: filament bulb (resistance increases with temperature), diode", "Factors affecting resistance: length (↑ length → ↑ R), cross-sectional area (↑ area → ↓ R), material, temperature"] },
+        { name: "10.8 Series and Parallel Circuits", diff: "hard", summary: ["Series: same current through all components; voltages add up; total resistance = R₁ + R₂ + R₃...", "Parallel: same voltage across all branches; currents add up; 1/R_total = 1/R₁ + 1/R₂ + ... (total R less than smallest)", "In parallel, if one component fails, others continue working — used in household wiring", "Potential divider: two resistors in series; output voltage = V_in × R₂/(R₁ + R₂) — used in sensing circuits"] },
+        { name: "10.9 Electrical Energy and Power", diff: "medium", summary: ["Power: P = IV = I²R = V²/R — rate of electrical energy transfer; unit = watt (W)", "Energy: E = Pt = IVt — total electrical energy transferred; unit = joule (J) or kilowatt-hour (kWh)", "1 kWh = 3.6 × 10⁶ J; electricity bills calculated in kWh — multiply power (kW) by time (hours)", "Heating effect of current: energy dissipated as heat in a resistor = I²Rt — basis of electric heaters and fuses"] },
+        { name: "10.10 Electrical Hazards and Safety", diff: "easy", summary: ["Fuse: thin wire that melts if current exceeds its rating — breaks the circuit and prevents overheating/fire", "Circuit breaker: electromagnetic or electronic switch that trips when current is too high — can be reset", "Earth wire: connects metal casing of appliances to earth — if live wire touches casing, current flows safely to earth", "Double insulation: no earth wire needed as outer casing is plastic; two layers of insulation protect the user"] },
+        { name: "10.11 Magnetic Fields", diff: "medium", summary: ["Magnetic field lines run from North pole to South pole outside a magnet; closer lines = stronger field", "Like poles repel; unlike poles attract — magnetic force is a non-contact force", "Earth has a magnetic field (geographic North is near magnetic South); compass aligns with field lines", "Magnetic field strength (flux density B) is measured in tesla (T); Earth's field ≈ 50 μT"] },
+        { name: "10.12 Magnetic Effect of a Current", diff: "medium", summary: ["A current-carrying conductor produces a circular magnetic field around it (right-hand grip rule for direction)", "Increasing current or decreasing distance from wire increases the strength of the magnetic field", "Two parallel wires carrying current in the same direction attract; opposite directions repel", "The magnetic field around a wire is used to define the ampere (SI base unit of current)"] },
+        { name: "10.13 Electromagnets and Applications", diff: "medium", summary: ["Solenoid: coil of wire; current produces a uniform magnetic field inside similar to a bar magnet", "Electromagnet strength increased by: more turns, greater current, soft iron core (easily magnetised and demagnetised)", "Applications: electric bells, relays, maglev trains, MRI scanners, scrap metal cranes, circuit breakers", "Soft iron core: easily magnetised and demagnetised; hard steel retains magnetism (permanent magnet)"] },
+        { name: "10.14 Electromagnetic Induction", diff: "hard", summary: ["EMF is induced in a conductor when there is a change in magnetic flux linking the conductor", "Faraday's Law: induced EMF is proportional to the rate of change of magnetic flux", "Lenz's Law: induced current opposes the change causing it (conservation of energy)", "Ways to increase induced EMF: move magnet faster, use stronger magnet, increase number of coil turns, use iron core"] },
+        { name: "10.15 Electric Motors", diff: "hard", summary: ["A current-carrying conductor in a magnetic field experiences a force: F = BIl (Fleming's Left Hand Rule)", "DC motor: current in armature coil produces force; split-ring commutator reverses current every half turn to maintain rotation", "Motor effect: force direction given by Fleming's LHR — thumb = force, index = field, middle = current", "Increasing motor speed: increase current, increase magnetic field strength, increase number of turns in armature coil"] },
+        { name: "10.16 Generators", diff: "hard", summary: ["AC generator: rotating coil in magnetic field; slip rings maintain continuous connection to external circuit", "EMF is induced as the coil rotates and cuts through magnetic field lines — varies sinusoidally", "Maximum EMF when coil is parallel to field (cutting field lines fastest); zero EMF when coil is perpendicular to field", "Increasing generator output: rotate faster, use stronger magnet, more turns, use iron core in coil"] },
+        { name: "10.17 Transformers", diff: "hard", summary: ["Transformer: two coils on a shared iron core; changing AC in primary induces EMF in secondary by mutual induction", "Turns ratio: Vs/Vp = Ns/Np — step-up transformer (Ns > Np) increases voltage; step-down decreases it", "Ideal transformer: Vp × Ip = Vs × Is — power in = power out; higher voltage means lower current", "Real transformers have losses: eddy currents (reduced by laminated core), resistance heating, flux leakage"] },
+        { name: "10.18 AC vs DC Current", diff: "medium", summary: ["DC (direct current): flows in one direction only — from battery or rectified supply; shown as flat line on oscilloscope", "AC (alternating current): direction reverses periodically — from generators; shown as sine wave on oscilloscope", "Mains AC in most countries: 50 Hz frequency, 230 V (UK) or 120 V (USA) RMS voltage", "AC is preferred for power transmission as voltage can be stepped up/down easily using transformers"] },
+        { name: "10.19 Power Transmission", diff: "hard", summary: ["Power loss in transmission cables: P_loss = I²R — minimised by reducing current (stepping up voltage)", "High voltage transmission (e.g. 400,000 V) greatly reduces current and therefore I²R losses in cables", "Step-up transformer at power station → high voltage transmission lines → step-down transformer near homes", "National Grid efficiency depends on minimising resistance losses over long distances using high voltage AC"] }
+      ]},
+      { name: "Topic 11: Atomic Physics", topics: [
+        { name: "11.1 Atoms and Subatomic Particles", diff: "easy", summary: ["Atom: tiny dense nucleus (protons + neutrons) surrounded by electrons in shells; mostly empty space", "Proton: relative mass 1, charge +1; Neutron: relative mass 1, charge 0; Electron: relative mass 1/1840, charge −1", "Atomic number Z = number of protons; mass number A = protons + neutrons; neutron number N = A − Z", "Neutral atom: number of electrons = number of protons; ion formed by gaining or losing electrons"] },
+        { name: "11.2 Nuclear Stability and Isotopes", diff: "medium", summary: ["Isotopes: same element (same Z), different mass number (different number of neutrons); same chemical properties", "Nuclear stability depends on the neutron-to-proton ratio; unstable nuclei undergo radioactive decay", "Nuclide notation: ᴬZX where A = mass number, Z = atomic number, X = element symbol", "Relative atomic mass: weighted average of isotope masses based on their natural abundances"] },
+        { name: "11.3 Radioactivity and Nuclear Radiation", diff: "hard", summary: ["Alpha (α): helium-4 nucleus (2p + 2n); charge +2; stopped by paper or a few cm of air; highly ionising", "Beta (β⁻): fast electron from neutron → proton conversion; stopped by aluminium; moderately ionising", "Gamma (γ): high-energy EM radiation; no charge or mass; reduced by thick lead; weakly ionising per interaction", "Decay equations: α decay reduces A by 4 and Z by 2; β decay increases Z by 1 (A unchanged); γ just releases energy"] },
+        { name: "11.4 Half-Life", diff: "hard", summary: ["Half-life: time for half the undecayed nuclei in a sample to decay — constant for each isotope", "After n half-lives, fraction remaining = (½)ⁿ; activity also halves each half-life", "Graphical method: plot activity vs time; read off time for activity to halve from the graph", "Applications: carbon-14 dating (half-life 5730 years), medical tracers (short half-life), power sources (long half-life)"] },
+        { name: "11.5 Ionising Effect and Detection", diff: "medium", summary: ["Ionising radiation removes electrons from atoms — creates ion pairs; causes chemical changes in biological tissue", "Geiger-Müller tube: ionising radiation enters thin window, ionises gas inside, produces electrical pulse counted electronically", "Cloud chambers: ions left by radiation cause vapour to condense into visible tracks — α shows thick straight tracks", "Background radiation: always present from cosmic rays, radon gas, rocks, medical sources, nuclear industry"] },
+        { name: "11.6 Applications of Radioactivity", diff: "medium", summary: ["Medical uses: gamma rays in cancer radiotherapy (kills tumour cells); tracers with short half-life for imaging", "Industrial uses: thickness gauging (β source; absorbed more by thicker material), sterilisation of equipment (gamma)", "Dangers: ionising radiation damages DNA causing mutations, cancer, or radiation sickness; dose measured in sieverts (Sv)", "Safety precautions: lead shielding, distance from source, minimise exposure time, use tongs not hands"] },
+        { name: "11.7 Nuclear Energy", diff: "hard", summary: ["Nuclear fission: heavy nucleus (U-235) absorbs neutron → splits into smaller nuclei + 2-3 neutrons + energy (E=mc²)", "Chain reaction: released neutrons trigger further fissions; controlled in reactor by control rods absorbing excess neutrons", "Nuclear fusion: two light nuclei fuse (e.g. H-2 + H-3 → He-4 + neutron) releasing enormous energy — powers stars", "Nuclear power: low carbon emissions per kWh but produces radioactive waste requiring safe storage for thousands of years"] }
+      ]},
+      { name: "Topic 12: Astrophysics", topics: [
+        { name: "12.1 The Solar System, Planets, and Satellites", diff: "easy", summary: ["Solar system: Sun (star) at centre; 8 planets in elliptical orbits; held in orbit by gravitational attraction", "Inner planets (rocky): Mercury, Venus, Earth, Mars; Outer planets (gas giants): Jupiter, Saturn, Uranus, Neptune", "Natural satellites (moons) orbit planets; artificial satellites orbit Earth for communication, GPS, weather, observation", "Asteroids: rocky bodies mainly in asteroid belt between Mars and Jupiter; comets: icy bodies with highly elliptical orbits"] },
+        { name: "12.2 Characteristics of the Sun and Planets", diff: "medium", summary: ["Sun: composed mainly of hydrogen and helium; energy produced by nuclear fusion in core; surface temperature ≈ 5500°C", "Planet characteristics: orbital period increases with distance from Sun (Kepler's 3rd law); inner planets denser", "Jupiter largest (mass > all other planets combined); Saturn least dense (would float in water); Pluto reclassified as dwarf planet", "Planetary data: compare orbital radius, period, surface temperature, number of moons, gravitational field strength"] },
+        { name: "12.3 Patterns in Planetary Data", diff: "medium", summary: ["Kepler's 3rd Law: T² ∝ r³ — orbital period squared is proportional to orbital radius cubed", "As distance from Sun increases: orbital period increases, orbital speed decreases, surface temperature decreases", "Gravitational field strength at surface: g = GM/r² — larger mass or smaller radius gives greater g", "Density and composition: rocky inner planets have higher density; gas giants have low average density despite huge mass"] },
+        { name: "12.4 Speed of Light and Astronomical Distances", diff: "medium", summary: ["Speed of light: c = 3 × 10⁸ m/s; a light-year is the distance light travels in one year ≈ 9.46 × 10¹⁵ m", "Astronomical unit (AU): mean Earth-Sun distance ≈ 1.5 × 10¹¹ m; used for distances within solar system", "Using speed of light: distance = c × time; e.g. Moon is ≈ 1.3 light-seconds away; nearest star ≈ 4.2 light-years", "Cosmic distances: Milky Way ≈ 100,000 light-years across; nearest large galaxy (Andromeda) ≈ 2.5 million light-years"] },
+        { name: "12.5 Satellites, Space Probes, and Telescopes", diff: "medium", summary: ["Geostationary satellites: orbital period = 24 h, stay above same point on Earth — used for TV, communications", "Low Earth orbit satellites: faster, closer — used for weather observation, GPS, Earth imaging", "Space probes travel beyond Earth orbit to explore planets, moons, and deep space — no crew required", "Space telescopes (e.g. Hubble) avoid atmospheric absorption and distortion — detect UV, X-ray, IR not visible from Earth"] },
+        { name: "12.6 Scientific vs Non-Scientific Claims in Space Science", diff: "easy", summary: ["Scientific claims: based on evidence, testable, falsifiable, peer-reviewed, reproducible by other scientists", "Non-scientific claims: not testable, based on belief/tradition, cannot be disproven, e.g. astrology", "Evaluating technology: consider benefits vs risks, cost, environmental impact, reliability, ethical implications", "Space exploration technology often has unexpected benefits: GPS, memory foam, water filtration, scratch-resistant lenses"] },
+        { name: "12.7 Overview of Galaxies, Stars, and Small Bodies", diff: "easy", summary: ["Galaxy: a system of billions of stars, gas, and dust held together by gravity; Milky Way is a spiral galaxy", "Stars: massive balls of plasma undergoing nuclear fusion; varied colours/temperatures (blue = hottest, red = coolest)", "Meteors: small particles that burn up in atmosphere (shooting stars); Meteorites: those that reach Earth's surface", "Comets: icy bodies; when near Sun, ice sublimates forming a tail pointing away from the Sun"] },
+        { name: "12.8 Role of Gravitational Attraction", diff: "medium", summary: ["Gravity is responsible for: holding solar systems and galaxies together, orbital motion of planets/moons, tides", "Newton's Law of Gravitation: F = Gm₁m₂/r² — force proportional to product of masses, inversely proportional to distance²", "Orbital speed: v = √(GM/r) — satellite in lower orbit must travel faster to maintain circular orbit", "Escape velocity: minimum speed to escape gravitational pull; v_esc = √(2GM/r) — independent of projectile mass"] },
+        { name: "12.9 The Big Bang Theory", diff: "medium", summary: ["Big Bang Theory: universe began from an extremely hot, dense point ≈ 13.8 billion years ago and has been expanding since", "Evidence: cosmic microwave background radiation (remnant heat from Big Bang), redshift of distant galaxies (expansion)", "Hubble's Law: recession speed ∝ distance (v = Hd) — more distant galaxies recede faster, showing expansion", "Open questions: nature of dark matter and dark energy which make up ≈ 95% of the universe"] },
+        { name: "12.10 Life Cycle of a Star", diff: "hard", summary: ["All stars: nebula → protostar (gravity compresses gas until fusion begins) → main sequence star (hydrogen fusion)", "Medium-mass star (like Sun): main sequence → red giant → planetary nebula → white dwarf → black dwarf (eventual fate)", "Massive star: main sequence → red supergiant → supernova (explosion) → neutron star or black hole", "Main sequence lifetime depends on mass: more massive stars burn faster and have shorter lives despite having more fuel"] },
+        { name: "12.11 Emission Spectra and Spectral Analysis", diff: "hard", summary: ["Each element produces a unique set of emission spectral lines — used as a 'fingerprint' to identify elements in stars", "Absorption spectra: dark lines in continuous spectrum where elements in the star's atmosphere absorb specific wavelengths", "Redshift: spectral lines shifted to longer wavelengths when source moves away from observer — evidence for expanding universe", "Temperature of a star determines its colour and peak wavelength (Wien's Law: λ_max ∝ 1/T)"] },
+        { name: "12.12 Kepler's Laws of Planetary Motion", diff: "hard", summary: ["Kepler's 1st Law: planets orbit the Sun in ellipses with the Sun at one focus (not a perfect circle)", "Kepler's 2nd Law: a line from Sun to planet sweeps equal areas in equal times — planets move faster when closer to Sun", "Kepler's 3rd Law: T² ∝ r³ — orbital period squared is proportional to semi-major axis cubed (T²/r³ = constant)", "Kepler's laws were empirical (observational); Newton later explained them using his law of gravitation"] },
+        { name: "12.13 Instruments Used in Astronomy", diff: "medium", summary: ["Optical telescope: collects and focuses visible light; refracting (lenses) or reflecting (mirrors) designs", "Radio telescope: detects radio waves from space; large dish focuses weak signals onto detector; works day/night", "Space telescopes: Hubble (visible/UV/IR), James Webb (infrared), Chandra (X-ray) — above atmospheric interference", "Spectrometers: split light into spectrum to identify elements, measure temperature, speed, and composition of stars"] },
+        { name: "12.14 Astronomical Telescope and Ray Diagrams", diff: "hard", summary: ["Refracting astronomical telescope: two converging lenses — objective (long focal length) and eyepiece (short focal length)", "In normal adjustment: final image at infinity; eye relaxed; separation of lenses = f_o + f_e", "Angular magnification M = f_o / f_e — longer objective focal length and shorter eyepiece focal length give higher magnification", "Ray diagram: parallel rays from distant object → refracted by objective → intermediate image at focal plane → magnified by eyepiece"] }
+      ]}
+    ]
+  }
+};
+// ═══════════════ UPLOADED NOTES STORAGE ═══════════════
+const uploadedNotes = { mathematics: [], biology: [], chemistry: [], physics: [], other: [] };
+
+// ═══════════════ PAGE NAVIGATION ═══════════════
+let currentSubject = '';
+let lastSubject = '';
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  window.scrollTo(0, 0);
+}
+
+function showSubject(subject) {
+  currentSubject = subject;
+  lastSubject = subject;
+  const data = subjectData[subject];
+  document.getElementById('subjectTitle').textContent = data.name;
+  document.getElementById('subjectSubtitle').textContent = data.subtitle;
+  document.getElementById('subjectBanner').style.background = data.color;
+  const sidebar = document.getElementById('sidebarContent');
+  sidebar.innerHTML = '';
+  data.units.forEach(unit => {
+    const safeId = 'ub-' + unit.name.replace(/\W+/g, '-');
+    const h = document.createElement('div');
+    h.className = 'unit-heading';
+    h.textContent = unit.name;
+    h.onclick = () => { const el = document.getElementById(safeId); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+    sidebar.appendChild(h);
+    unit.topics.forEach(topic => {
+      const a = document.createElement('span');
+      a.className = 'topic-link';
+      a.textContent = topic.name;
+      a.onclick = () => openTopic(topic, unit.name);
+      sidebar.appendChild(a);
+    });
+  });
+  renderAllTopics(data.units);
+  showPage('subject');
+  document.getElementById('subjectSearch').value = '';
+  const navMap = { mathematics: 'nav-maths', biology: 'nav-bio', chemistry: 'nav-chem', physics: 'nav-phys' };
+  if (navMap[subject]) document.getElementById(navMap[subject]).classList.add('active');
+}
+
+function renderAllTopics(units) {
+  const area = document.getElementById('mainTopicArea');
+  area.innerHTML = '';
+  units.forEach(unit => {
+    const safeId = 'ub-' + unit.name.replace(/\W+/g, '-');
+    const d = document.createElement('div');
+    d.className = 'unit-block';
+    d.id = safeId;
+    d.innerHTML = `<div class="unit-block-title">${unit.name}</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'all-topics';
+    unit.topics.forEach(topic => {
+      const card = document.createElement('div');
+      card.className = 'mini-topic-card';
+      card.setAttribute('data-name', topic.name.toLowerCase());
+      card.setAttribute('data-unit', unit.name.toLowerCase());
+      card.innerHTML = `<h4>${topic.name}</h4><div class="unit-lbl">${unit.name}</div><div class="mini-card-footer"><div class="resource-icons">▶️ 📄</div><span class="diff-tag ${topic.diff}">${topic.diff.charAt(0).toUpperCase() + topic.diff.slice(1)}</span></div>`;
+      card.onclick = () => openTopic(topic, unit.name);
+      grid.appendChild(card);
+    });
+    d.appendChild(grid);
+    area.appendChild(d);
+  });
+}
+
+function filterTopics() {
+  const q = document.getElementById('subjectSearch').value.toLowerCase();
+  document.querySelectorAll('.mini-topic-card').forEach(card => {
+    const n = card.getAttribute('data-name') || '';
+    const u = card.getAttribute('data-unit') || '';
+    card.style.display = (n.includes(q) || u.includes(q)) ? '' : 'none';
+  });
+  document.querySelectorAll('.unit-block').forEach(block => {
+    const vis = block.querySelectorAll('.mini-topic-card:not([style*="display: none"])');
+    block.style.display = (vis.length === 0 && q !== '') ? 'none' : '';
+  });
+}
+
+function openTopic(topic, unitName) {
+  document.getElementById('viewerTopicName').textContent = topic.name;
+  document.getElementById('viewerUnitName').textContent = unitName;
+  const sum = document.getElementById('quickSummary');
+  sum.innerHTML = '';
+  topic.summary.forEach(pt => { const li = document.createElement('li'); li.textContent = pt; sum.appendChild(li); });
+  if (topic.video) {
+    const watchUrl = topic.video.replace('https://www.youtube.com/embed/', 'https://www.youtube.com/watch?v=');
+    document.getElementById('videoEmbed').innerHTML =
+      '<div style="background:#1B2A4A;border-radius:12px;height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;">' +
+      '<div style="font-size:48px;line-height:1;">&#9654;</div>' +
+      '<p style="color:white;font-weight:700;font-size:15px;text-align:center;font-family:Poppins,sans-serif;">' + topic.name + '</p>' +
+      '<a href="' + watchUrl + '" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#FF0000;color:white;padding:12px 28px;border-radius:22px;font-weight:700;font-size:14px;text-decoration:none;font-family:Nunito,sans-serif;">&#9654;&nbsp; Watch on YouTube</a>' +
+      '</div>';
+  } else {
+    document.getElementById('videoEmbed').innerHTML =
+      '<div class="video-placeholder"><div style="font-size:44px">&#9658;</div><p style="font-weight:700;margin-top:6px">' + topic.name + '</p><p style="font-size:11px;opacity:0.5;margin-top:4px">Video coming soon</p></div>';
+  }
+  if (topic.pdf) {
+    document.getElementById('pdfEmbed').innerHTML = '<iframe src="' + topic.pdf + '" width="100%" height="400" frameborder="0" style="border-radius:12px;border:1.5px solid #E0E0E0;"></iframe>';
+  } else {
+    document.getElementById('pdfEmbed').innerHTML = '<div class="pdf-placeholder"><div style="font-size:32px">\uD83D\uDCD5</div><p style="font-weight:700">Notes: ' + topic.name + '</p><p style="font-size:11px">PDF coming soon</p></div>';
+  }
+  showPage('viewer');
+}
+
+function goBack() { if (lastSubject) showSubject(lastSubject); else showPage('home'); }
+
+// ═══════════════ PAST PAPERS ═══════════════
+function showPastPapers(subject) {
+  showPage('pastpapers');
+  switchPPTab(subject || 'mathematics');
+  document.getElementById('nav-pp').classList.add('active');
+}
+
+function switchPPTab(subject) {
+  document.querySelectorAll('.pp-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pp-subject-section').forEach(s => s.classList.remove('active'));
+  const tabMap = { mathematics: 0, biology: 1, chemistry: 2, physics: 3 };
+  const tabs = document.querySelectorAll('.pp-tab');
+  if (tabs[tabMap[subject]]) tabs[tabMap[subject]].classList.add('active');
+  const sec = document.getElementById('pp-' + subject);
+  if (sec) sec.classList.add('active');
+}
+
+// ═══════════════ MYP NOTES ═══════════════
+function showNotes(subject) {
+  showPage('notes');
+  switchNotesTab(subject || 'mathematics');
+  document.getElementById('nav-notes').classList.add('active');
+}
+
+function switchNotesTab(subject) {
+  document.querySelectorAll('.notes-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.notes-subject-section').forEach(s => s.classList.remove('active'));
+  const tabMap = { mathematics: 0, biology: 1, chemistry: 2, physics: 3, other: 4 };
+  const tabs = document.querySelectorAll('.notes-tab');
+  if (tabs[tabMap[subject]] !== undefined) tabs[tabMap[subject]].classList.add('active');
+  const sec = document.getElementById('notes-' + subject);
+  if (sec) sec.classList.add('active');
+}
+
+function getFileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  const icons = { pdf: '📕', png: '🖼️', jpg: '🖼️', jpeg: '🖼️', docx: '📝', pptx: '📊', txt: '📄' };
+  return icons[ext] || '📎';
+}
+
+function handleFileUpload(event, subject) {
+  const files = Array.from(event.target.files);
+  files.forEach(file => addNoteFile(file, subject));
+  event.target.value = '';
+}
+
+function addNoteFile(file, subject) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const noteObj = { name: file.name, size: file.size, type: file.type, dataUrl: e.target.result, id: Date.now() + Math.random() };
+    uploadedNotes[subject].push(noteObj);
+    renderNotes(subject);
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderNotes(subject) {
+  const grid = document.getElementById('notes-grid-' + subject);
+  const empty = document.getElementById('empty-' + subject);
+  const notes = uploadedNotes[subject];
+  grid.innerHTML = '';
+  if (notes.length === 0) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  notes.forEach(note => {
+    const sizeStr = note.size > 1024 * 1024 ? (note.size / (1024 * 1024)).toFixed(1) + ' MB' : (note.size / 1024).toFixed(0) + ' KB';
+    const card = document.createElement('div');
+    card.className = 'note-card';
+    card.innerHTML = `<div class="note-icon">${getFileIcon(note.name)}</div><div class="note-card-info"><div class="note-card-title" title="${note.name}">${note.name}</div><div class="note-card-sub">${sizeStr}</div></div><div class="note-card-actions"><button class="note-action-btn view" onclick="viewNote('${note.id}','${subject}')">View</button><button class="note-action-btn del" onclick="deleteNote('${note.id}','${subject}')">✕</button></div>`;
+    grid.appendChild(card);
+  });
+}
+
+function viewNote(id, subject) {
+  const note = uploadedNotes[subject].find(n => String(n.id) === String(id));
+  if (!note) return;
+  document.getElementById('modalFileName').textContent = note.name;
+  const body = document.getElementById('modalBody');
+  body.innerHTML = '';
+  if (note.type === 'application/pdf') {
+    body.innerHTML = `<embed src="${note.dataUrl}" type="application/pdf" width="100%" height="100%">`;
+  } else if (note.type.startsWith('image/')) {
+    body.innerHTML = `<img class="notes-modal-img" src="${note.dataUrl}" alt="${note.name}">`;
+  } else {
+    body.innerHTML = `<div style="padding:30px;font-family:'Nunito',sans-serif;color:#1B2A4A;font-size:15px;"><p style="margin-bottom:12px;font-weight:700;">📎 ${note.name}</p><p>This file type cannot be previewed directly in the browser.</p><a href="${note.dataUrl}" download="${note.name}" style="display:inline-block;margin-top:16px;background:#4A90D9;color:white;padding:10px 22px;border-radius:18px;font-weight:700;text-decoration:none;">⬇ Download File</a></div>`;
+  }
+  document.getElementById('notesModalOverlay').classList.add('open');
+}
+
+function closeNotesModal() {
+  document.getElementById('notesModalOverlay').classList.remove('open');
+  document.getElementById('modalBody').innerHTML = '';
+}
+
+function deleteNote(id, subject) {
+  uploadedNotes[subject] = uploadedNotes[subject].filter(n => String(n.id) !== String(id));
+  renderNotes(subject);
+}
+
+function dragOver(event, subject) { event.preventDefault(); document.getElementById('dropZone-' + subject).classList.add('drag-over'); }
+function dragLeave(event, subject) { document.getElementById('dropZone-' + subject).classList.remove('drag-over'); }
+function dropFile(event, subject) {
+  event.preventDefault();
+  document.getElementById('dropZone-' + subject).classList.remove('drag-over');
+  Array.from(event.dataTransfer.files).forEach(file => addNoteFile(file, subject));
+}
+function switchNotesTab() {} 
+
+document.getElementById('notesModalOverlay').addEventListener('click', function (e) {
+  if (e.target === this) closeNotesModal();
+});
+
+// ═══════════════ GLOBAL SEARCH ═══════════════
+function globalSearchFn() {
+  const q = document.getElementById('globalSearch').value.toLowerCase().trim();
+  const overlay = document.getElementById('searchOverlay');
+  overlay.innerHTML = '';
+  if (!q) return;
+  let results = [];
+  Object.entries(subjectData).forEach(([sk, subject]) => {
+    subject.units.forEach(unit => {
+      if (unit.name.toLowerCase().includes(q)) results.push({ type: 'unit', unitName: unit.name, sk, sName: subject.name });
+      unit.topics.forEach(topic => {
+        if (topic.name.toLowerCase().includes(q)) results.push({ type: 'topic', topic, unit: unit.name, sk, sName: subject.name });
+      });
+    });
+  });
+  if (results.length === 0) { overlay.innerHTML = '<div class="search-result-item" style="color:#999">No results found</div>'; return; }
+  results.slice(0, 14).forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'search-result-item';
+    if (r.type === 'unit') {
+      div.innerHTML = `<span style="font-size:10px;color:#4A90D9;font-weight:800;text-transform:uppercase">Unit</span> ${r.unitName}<br><span class="search-result-subject">${r.sName}</span>`;
+      div.onclick = () => { showSubject(r.sk); setTimeout(() => { const el = document.getElementById('ub-' + r.unitName.replace(/\W+/g, '-')); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150); document.getElementById('globalSearch').value = ''; overlay.classList.remove('visible'); };
+    } else {
+      div.innerHTML = `${r.topic.name}<br><span class="search-result-unit">${r.unit}</span> <span class="search-result-subject">· ${r.sName}</span>`;
+      div.onclick = () => { lastSubject = r.sk; openTopic(r.topic, r.unit); document.getElementById('globalSearch').value = ''; overlay.classList.remove('visible'); };
+    }
+    overlay.appendChild(div);
+  });
+}
+</script>
+</body>
+</html>
